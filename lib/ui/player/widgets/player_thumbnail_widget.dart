@@ -38,7 +38,7 @@ class _PlayerThumbnailWidgetState extends State<PlayerThumbnailWidget> {
               )
             ]),
         child: Image.asset(
-          Utils.getImagePath("music_1"),
+          Utils.getImagePath("music_2"),
           fit: BoxFit.cover,
         ),
           clipBehavior:Clip.antiAliasWithSaveLayer,

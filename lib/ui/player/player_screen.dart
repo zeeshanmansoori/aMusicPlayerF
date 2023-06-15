@@ -20,19 +20,20 @@ class PlayerScreen extends StatelessWidget {
         mainAxisSize: MainAxisSize.max,
         children: [
           Row(
+            mainAxisSize: MainAxisSize.max,
             children: [
               IconButton(
-                onPressed: () {},
                 icon: const Icon(
                   CupertinoIcons.chevron_down,
                 ),
+                onPressed: () => Navigator.pop(context),
               )
             ],
-          ).padding(bottom: 20),
-          Row(
+          ),
+          const Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const PlayerThumbnailWidget(),
+              PlayerThumbnailWidget(),
             ],
           ).expanded(flex: 2),
           MarqueeWidget(
@@ -51,7 +52,7 @@ class PlayerScreen extends StatelessWidget {
             vertical: 10,
           ),
           const PlayerControllersWidget().padding(top: 30),
-          Spacer(),
+          const Spacer(),
         ],
       ),
     );
