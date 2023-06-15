@@ -8,18 +8,54 @@ import 'package:shared_repo/model_exports.dart';
 class ApiClient {
   final String baseUrl = "api.spotify.com";
   static const String accessToken =
-      "BQAT2n5k7NYHPUdHeyaKMaxMkgpPHBNcf-eY1OViervMdMx6wWx4gum-kmcIvBCedo5AW8W65O-zfBNr8RcB0-O62DRBglp56J8a1zZ2uXLapPL9oS0";
+      "BQC4BA1OCaHOQNT_HlFAzcUf-7ifHtmdDhCgVCyB1i9PPKGKcAfqHSYCb4HTUYFoikGtXhIEIFab-bCTw6SLzOrX1f55SS9_9RyCsF1Ogrpse2cm5QA";
 
   final header = {"Authorization": "Bearer $accessToken"};
 
-  Future<RequestStatus<List<String>>> getGenres() async {
+  void getAccessToken() async {
+    var headers = {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Cookie':
+          '__Host-device_id=AQCEiu0w1lw_1HwredFklPB5EkAn6hTcOm_al3TpfDlEdLOv9GgDzPAgYiacrYRVJzj4tftgHL1qi_2Pi2za6AGk1-gbwb2isWs'
+    };
+    var request = http.Request(
+        'POST', Uri.parse('https://accounts.spotify.com/api/token'));
+    request.bodyFields = {
+      'grant_type': 'client_credentials',
+      'client_id': '690a76366ff84bc3b279ec8ea11660a1',
+      'client_secret': '1cce6a2e492041769d7e31175011731d'
+    };
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200) {
+      print("token : ");
+      print(await response.stream.bytesToString());
+    } else {
+      print(response.reasonPhrase);
+    }
+  }
+
+  Future<RequestStatus<List<dynamic>>> getNewAlbums() async {
+    var uri = Uri.https(
+      baseUrl,
+      "/v1/recommendations/available-genre-seeds",
+    );
+    return runWithCatch(
+          () => http.get(uri, headers: header),
+          (decodedBody) => List.of(decodedBody["genres"] as Iterable<dynamic>,),
+    );
+  }
+
+  Future<RequestStatus<List<dynamic>>> getGenres() async {
     var uri = Uri.https(
       baseUrl,
       "/v1/recommendations/available-genre-seeds",
     );
     return runWithCatch(
       () => http.get(uri, headers: header),
-      (decodedBody) => decodedBody as List<String>,
+      (decodedBody) => List.of(decodedBody["genres"] as Iterable<dynamic>,),
     );
   }
 
@@ -29,7 +65,7 @@ class ApiClient {
   ) async {
     try {
       final response = await getResponse.call();
-      if (response.statusCode == RequestStatus.SUCCESS) {
+      if (response.statusCode == 200) {
         var decodedData = getDataFromBody.call(jsonDecode(response.body));
 
         return RequestStatus(

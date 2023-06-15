@@ -4,7 +4,6 @@ import 'package:a_music_player_flutter/ui/album/album_screen.dart';
 import 'package:a_music_player_flutter/ui/artist/artist_screen.dart';
 import 'package:a_music_player_flutter/ui/home/home_screen.dart';
 import 'package:a_music_player_flutter/ui/main/player_static_bar_widget.dart';
-import 'package:a_music_player_flutter/ui/player/player_screen.dart';
 import 'package:a_music_player_flutter/ui/playlist/playlist_screen.dart';
 import 'package:a_music_player_flutter/utils/constants.dart';
 import 'package:a_music_player_flutter/utils/widget_extensions.dart';

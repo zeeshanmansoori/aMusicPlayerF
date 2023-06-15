@@ -9,4 +9,9 @@ void main() {
     var result = await client.getGenres();
     assert(result.status == RequestStatus.SUCCESS);
   });
+
+  // test(
+  //   "getAccessToken",
+  //   () => client.getAccessToken(),
+  // );
 }
