@@ -1,0 +1,23 @@
+name: api_client_repo
+description: Dart package client repo.
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+version: 1.0.0
+
+
+environment:
+  sdk: '>=2.17.0 <3.0.0'
+
+dependencies:
+  http: ^1.0.0
+  shared_repo:
+    path: ../shared_repo
+
+#
+#  fuel_abc_shared_preferences:
+#      path: ../fuel_abc_shared_preferences
+
+
+dev_dependencies:
+  test: ^1.21.1
+  flutter_lints: ^2.0.1
+  lints: ^2.0.0
