@@ -4,11 +4,18 @@ import 'dart:io';
 
 import 'package:http/http.dart' as http;
 import 'package:shared_repo/model_exports.dart';
+import 'package:shared_repo/models/albums_response.dart';
 
 class ApiClient {
+  static ApiClient? _instance;
+
+  static ApiClient getInstance() {
+    _instance ??= ApiClient();
+    return _instance!;
+  }
+
   final String baseUrl = "api.spotify.com";
-  static const String accessToken =
-      "BQC4BA1OCaHOQNT_HlFAzcUf-7ifHtmdDhCgVCyB1i9PPKGKcAfqHSYCb4HTUYFoikGtXhIEIFab-bCTw6SLzOrX1f55SS9_9RyCsF1Ogrpse2cm5QA";
+  static const String accessToken ="BQCNojbPv_ExaBXOT8Ey_wFyTA9m8v4JUC7rSpIIhxFeWoizbCdpA_u5JYbLRYH1M0bPE0UlGwYptKW101TYQsf4rvM7U0GOThfXYzwZyf8Df1e67Os";
 
   final header = {"Authorization": "Bearer $accessToken"};
 
@@ -37,14 +44,25 @@ class ApiClient {
     }
   }
 
-  Future<RequestStatus<List<dynamic>>> getNewAlbums() async {
+  Future<RequestStatus<AlbumsResponse>> getNewAlbums() async {
     var uri = Uri.https(
       baseUrl,
-      "/v1/recommendations/available-genre-seeds",
+      "/v1/browse/new-releases",
+    );
+    return runWithCatch(
+      () => http.get(uri, headers: header),
+      (decodedBody) => AlbumsResponse.fromJson(decodedBody["albums"]),
+    );
+  }
+
+  Future<RequestStatus<AlbumResponse>> getAlbum(String albumId) async {
+    var uri = Uri.https(
+      baseUrl,
+      "/v1/albums/$albumId",
     );
     return runWithCatch(
           () => http.get(uri, headers: header),
-          (decodedBody) => List.of(decodedBody["genres"] as Iterable<dynamic>,),
+          (decodedBody) => AlbumResponse.fromJson(decodedBody),
     );
   }
 
@@ -55,7 +73,9 @@ class ApiClient {
     );
     return runWithCatch(
       () => http.get(uri, headers: header),
-      (decodedBody) => List.of(decodedBody["genres"] as Iterable<dynamic>,),
+      (decodedBody) => List.of(
+        decodedBody["genres"] as Iterable<dynamic>,
+      ),
     );
   }
 
@@ -66,6 +86,7 @@ class ApiClient {
     try {
       final response = await getResponse.call();
       if (response.statusCode == 200) {
+        print("zeeshan response ${jsonDecode(response.body)}");
         var decodedData = getDataFromBody.call(jsonDecode(response.body));
 
         return RequestStatus(
@@ -81,11 +102,11 @@ class ApiClient {
   }
 
   RequestStatus<T> _checkErrorCode<T>(http.Response response) {
+    print("ApiClient _checkErrorCode ${response.statusCode}");
     if (response.statusCode == 401) {
-      print("ApiClient _checkErrorCode ${response.request}");
       return RequestStatus<T>(
         RequestStatus.UN_AUTHORIZE,
-        "session expired!",
+        "Session Expired!",
         null,
       );
     }

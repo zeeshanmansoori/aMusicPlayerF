@@ -1,4 +1,5 @@
 import 'package:a_music_player_flutter/cubits/home/home_cubit.dart';
+import 'package:a_music_player_flutter/ui/album/album_screen.dart';
 import 'package:a_music_player_flutter/ui/home/widgets/album_item_widget.dart';
 import 'package:a_music_player_flutter/utils/widget_extensions.dart';
 import 'package:api_client_repo/api_client.dart';
@@ -6,9 +7,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
 
-class AlbumScreen extends StatelessWidget {
-  const AlbumScreen({super.key});
-  static const String routeName = "/albumScreen";
+class AlbumsScreen extends StatelessWidget {
+
+  static const routeName = "/AlbumsScreen";
+
+  const AlbumsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -21,9 +24,14 @@ class AlbumScreen extends StatelessWidget {
           }
           var data = state.data;
           if (data == null) return Text(state.message ?? "").wrapCenter();
-          return Column(children: [
-            Text("Album Screen")
-          ],);
+          return GridView.count(
+            crossAxisCount: 2,
+            children: data.items
+                .map(
+                  (e) => AlbumItemWidget(item: e),
+                )
+                .toList(),
+          );
         },
       ),
     );

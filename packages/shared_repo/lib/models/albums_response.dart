@@ -1,4 +1,4 @@
-import 'package:shared_repo/models/album_item_response.dart';
+import 'package:shared_repo/models/Items.dart';
 
 class AlbumsResponse {
   AlbumsResponse({
@@ -15,7 +15,7 @@ class AlbumsResponse {
   int offset;
   int limit;
   String href;
-  List<AlbumItemResponse> items;
+  List<Items> items;
 
   factory AlbumsResponse.fromJson(Map<dynamic, dynamic> json) => AlbumsResponse(
     next: json["next"],
@@ -23,7 +23,7 @@ class AlbumsResponse {
     offset: json["offset"],
     limit: json["limit"],
     href: json["href"],
-    items: List<AlbumItemResponse>.from(json["items"].map((x) => AlbumItemResponse.fromJson(x))),
+    items: List<Items>.from(json["items"].map((x) => Items.fromJson(x))),
   );
 
   Map<dynamic, dynamic> toJson() => {
@@ -34,4 +34,9 @@ class AlbumsResponse {
     "href": href,
     "items": List<dynamic>.from(items.map((x) => x.toJson())),
   };
+
+  @override
+  String toString() {
+    return 'AlbumsResponse{next: $next, total: $total, offset: $offset, limit: $limit, href: $href, items: $items}';
+  }
 }

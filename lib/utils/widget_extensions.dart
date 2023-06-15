@@ -3,10 +3,20 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 extension WidgetExtensions on Widget {
+  Widget wrapCenter() => Center(
+        child: this,
+      );
+
   Widget expanded({int flex = 1}) => Expanded(
         flex: flex,
         child: this,
       );
+
+  Widget paddingAll(double padding) {
+    return Padding(
+      padding: EdgeInsets.all(padding),
+    );
+  }
 
   Widget paddingWithSymmetry({
     double vertical = 0,

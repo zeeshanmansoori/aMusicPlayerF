@@ -3,12 +3,12 @@ import 'package:flutter/cupertino.dart';
 class NavItem {
   final String title;
   final IconData icon;
-  final Widget screen;
+  final String routeName;
 
   const NavItem({
     required this.title,
     required this.icon,
-    required this.screen,
+    required this.routeName,
   });
 }
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class PlaylistScreen extends StatelessWidget {
+  static const String routeName = "/PlaylistScreen";
   const PlaylistScreen({super.key});
 
   @override

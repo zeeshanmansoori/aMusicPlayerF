@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class ArtistScreen extends StatelessWidget {
+  static const String routeName = "/ArtistScreen";
   const ArtistScreen({super.key});
 
   @override
