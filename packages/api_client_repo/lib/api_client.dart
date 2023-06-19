@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:http/http.dart' as http;
@@ -8,18 +9,21 @@ import 'package:shared_repo/models/albums_response.dart';
 
 class ApiClient {
   static ApiClient? _instance;
+  static String accessToken = "";
 
   static ApiClient getInstance() {
     _instance ??= ApiClient();
+    // _setNewToken(getToken);
+    // Future<String?> Function() getToken,
+    // void Function(String token) setToken,
     return _instance!;
   }
 
   final String baseUrl = "api.spotify.com";
-  static const String accessToken ="BQCNojbPv_ExaBXOT8Ey_wFyTA9m8v4JUC7rSpIIhxFeWoizbCdpA_u5JYbLRYH1M0bPE0UlGwYptKW101TYQsf4rvM7U0GOThfXYzwZyf8Df1e67Os";
 
-  final header = {"Authorization": "Bearer $accessToken"};
+  Map<String, String> get header => {"Authorization": "Bearer $accessToken"};
 
-  void getAccessToken() async {
+  Future<String> getAccessToken([void Function()? onSuccess]) async {
     var headers = {
       'Content-Type': 'application/x-www-form-urlencoded',
       'Cookie':
@@ -37,10 +41,15 @@ class ApiClient {
     http.StreamedResponse response = await request.send();
 
     if (response.statusCode == 200) {
-      print("token : ");
-      print(await response.stream.bytesToString());
+      var tokenObj = await response.stream.bytesToString();
+      var json = jsonDecode(tokenObj);
+      var token = json["access_token"];
+      accessToken = token;
+      print("zeeshan token $accessToken");
+      onSuccess?.call();
+      return token;
     } else {
-      print(response.reasonPhrase);
+      return "";
     }
   }
 
@@ -102,7 +111,7 @@ class ApiClient {
   }
 
   RequestStatus<T> _checkErrorCode<T>(http.Response response) {
-    print("ApiClient _checkErrorCode ${response.statusCode}");
+    log("ApiClient _checkErrorCode ${response.statusCode} ${response.body}");
     if (response.statusCode == 401) {
       return RequestStatus<T>(
         RequestStatus.UN_AUTHORIZE,
@@ -147,4 +156,11 @@ class ApiClient {
       null,
     );
   }
+
+  // static void _setNewToken(Future<String?> Function() getToken) async{
+  //   var oldToken  = await getToken.call();
+  //   if(oldToken!=null){
+  //     accessToken = oldToken;
+  //   }
+  // }
 }

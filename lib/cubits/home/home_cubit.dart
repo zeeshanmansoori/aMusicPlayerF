@@ -3,6 +3,7 @@ import 'package:api_client_repo/api_client.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:formz/formz.dart';
+import 'package:shared_repo/model_exports.dart';
 import 'package:shared_repo/models/albums_response.dart';
 
 part 'home_state.dart';
@@ -22,5 +23,8 @@ class HomeCubit extends Cubit<HomeState> {
       data: result.body,
       message: result.toMessage(),
     ));
+    if(result.status == RequestStatus.UN_AUTHORIZE){
+      _client.getAccessToken(_getAlbums);
+    }
   }
 }

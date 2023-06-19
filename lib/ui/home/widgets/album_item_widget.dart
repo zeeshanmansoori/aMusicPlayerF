@@ -26,6 +26,7 @@ class AlbumItemWidget extends StatelessWidget {
       onClick: () => Navigator.pushNamed(
         context,
         AlbumScreen.routeName,
+        arguments: item.id,
       ),
     );
   }

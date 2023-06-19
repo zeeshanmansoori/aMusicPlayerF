@@ -13,10 +13,20 @@ import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
-  var client = ApiClient.getInstance();
-  runApp( MyApp(client));
+  var client = ApiClient.getInstance(
+    // () async {
+    //   var shared = await SharedPreferences.getInstance();
+    //   return shared.getString(Constants.accessToken);
+    // },
+    // (token) async {
+    //   var shared = await SharedPreferences.getInstance();
+    //   shared.setString(Constants.accessToken, token);
+    // },
+  );
+  runApp(MyApp(client));
 }
 
 class MyApp extends StatelessWidget {
@@ -38,6 +48,9 @@ class MyApp extends StatelessWidget {
           RepositoryProvider(create: (c) => client),
         ],
         child: const MainScreen(),
+        // child: Scaffold(
+        //   body: AlbumScreen(),
+        // ),
       ),
     );
   }

@@ -24,6 +24,7 @@ dependencies:
     path: packages/api_client_repo
   shared_repo:
     path: packages/shared_repo
+  shared_preferences: ^2.1.2
 
 
 
