@@ -14,18 +14,21 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (BuildContext context) => HomeCubit(context.read<ApiClient>()),
-      child: BlocBuilder<HomeCubit, HomeState>(
-        builder: (context, state) {
-          if (state.apiStatus.isInProgress) {
-            return const CircularProgressIndicator().wrapCenter();
-          }
-          var data = state.data;
-          if (data == null) return  Text(state.message??"").wrapCenter();
-          return GridView.count(
-            crossAxisCount: 2,
-            children: data.items.map((e) => AlbumItemWidget(item: e)).toList(),
-          );
-        },
+      child: Scaffold(
+        body: BlocBuilder<HomeCubit, HomeState>(
+          builder: (context, state) {
+            if (state.apiStatus.isInProgress) {
+              return const CircularProgressIndicator().wrapCenter();
+            }
+            var data = state.data;
+            if (data == null) return Text(state.message ?? "").wrapCenter();
+            return GridView.count(
+              crossAxisCount: 2,
+              children:
+                  data.items.map((e) => AlbumItemWidget(item: e)).toList(),
+            );
+          },
+        ),
       ),
     );
   }

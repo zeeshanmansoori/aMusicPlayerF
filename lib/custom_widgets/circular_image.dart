@@ -13,17 +13,27 @@ class CircularImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return Container(
       clipBehavior: Clip.antiAlias,
       decoration: const BoxDecoration(
         shape: BoxShape.circle,
       ),
-      child: Image.asset(
+      child: _isLocalUri()?Image.asset(
         Utils.getImagePath(url),
+        height: size,
+        width: size,
+        fit: BoxFit.cover,
+      ):Image.network(
+        url,
         height: size,
         width: size,
         fit: BoxFit.cover,
       ),
     );
+  }
+
+  bool _isLocalUri(){
+    return url.startsWith("assets/");
   }
 }

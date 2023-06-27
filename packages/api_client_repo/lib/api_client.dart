@@ -9,7 +9,7 @@ import 'package:shared_repo/models/albums_response.dart';
 
 class ApiClient {
   static ApiClient? _instance;
-  static String accessToken = "";
+  static String accessToken = "BQBpHDftt1PQXiVU5vV_DvKmOwgAEmVTWKNPHzjqunibkLUXQ79oygRIg2I0dS0VzRTIctK-AaIMAehuYz4Lk7sCVmWz-I6TnrJUnCW2g7smA1sYUik";
 
   static ApiClient getInstance() {
     _instance ??= ApiClient();

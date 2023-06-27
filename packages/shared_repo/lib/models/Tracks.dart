@@ -1,5 +1,4 @@
-import 'package:shared_repo/models/Items.dart';
-
+import 'package:shared_repo/model_exports.dart';
 
 class Tracks {
   Tracks({
@@ -9,7 +8,8 @@ class Tracks {
     required this.offset,
     required this.previous,
     required this.total,
-    required this.items,});
+    required this.items,
+  });
 
   factory Tracks.fromJson(dynamic json) {
     var href = json['href'];
@@ -18,28 +18,30 @@ class Tracks {
     var offset = json['offset'];
     var previous = json['previous'];
     var total = json['total'];
-    var items = <Items>[];
+    var items = <TrackItemsResponse>[];
     if (json['items'] != null) {
       json['items'].forEach((v) {
-        items.add(Items.fromJson(v));
+        items.add(TrackItemsResponse.fromJson(v));
       });
     }
-    return Tracks(href: href,
+    return Tracks(
+      href: href,
       limit: limit,
       next: next,
       offset: offset,
       previous: previous,
       total: total,
-      items: items,);
+      items: items,
+    );
   }
 
   String href;
   int limit;
-  String next;
+  String? next;
   int offset;
-  String previous;
+  String? previous;
   int total;
-  List<Items> items;
+  List<TrackItemsResponse> items;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};

@@ -6,6 +6,30 @@ import 'ExternalUrls.dart';
 import 'Tracks.dart';
 
 class AlbumResponse {
+
+  final String albumType;
+  final int totalTracks;
+  final List<String> availableMarkets;
+  final ExternalUrls? externalUrls;
+  final String href;
+  final String id;
+  final List<ImageResponse> images;
+  final String name;
+  final String releaseDate;
+  final String releaseDatePrecision;
+  final Restrictions? restrictions;
+  final String type;
+  final String uri;
+
+  //List<Copyrights> copyrights;
+  // ExternalIds externalIds;
+  final List<String> genres;
+  final String label;
+  final int popularity;
+  final List<ArtistResponse> artists;
+  final Tracks? tracks;
+
+
   AlbumResponse({
     required this.albumType,
     required this.totalTracks,
@@ -94,28 +118,6 @@ class AlbumResponse {
       tracks: tracks,
     );
   }
-
-  String albumType;
-  int totalTracks;
-  List<String> availableMarkets;
-  ExternalUrls? externalUrls;
-  String href;
-  String id;
-  List<ImageResponse> images;
-  String name;
-  String releaseDate;
-  String releaseDatePrecision;
-  Restrictions? restrictions;
-  String type;
-  String uri;
-
-  //List<Copyrights> copyrights;
-  // ExternalIds externalIds;
-  List<String> genres;
-  String label;
-  int popularity;
-  List<ArtistResponse> artists;
-  Tracks? tracks;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};

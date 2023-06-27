@@ -12,6 +12,7 @@ import 'package:api_client_repo/api_client.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -39,7 +40,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      theme: FlexThemeData.light(scheme: FlexScheme.blue),
+      theme: FlexThemeData.light(scheme: FlexScheme.blueWhale),
       darkTheme: FlexThemeData.dark(scheme: FlexScheme.blue),
       // Use dark or light theme based on system setting.
       themeMode: ThemeMode.system,
@@ -97,6 +98,14 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
         return PlayerCubit();
       },
       child: Scaffold(
+        appBar: PreferredSize(
+          preferredSize: Size.zero,
+          child: AppBar(
+            systemOverlayStyle: SystemUiOverlayStyle.dark.copyWith(
+              statusBarColor: Colors.white,
+            ),
+          ),
+        ),
         bottomNavigationBar: NavigationBar(
           height: Constants.bottomNavHeight,
           selectedIndex: selectedIndex,

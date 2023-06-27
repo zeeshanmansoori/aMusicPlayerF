@@ -1,5 +1,8 @@
+import 'dart:ui';
+
 import 'package:a_music_player_flutter/cubits/album/album_cubit.dart';
 import 'package:a_music_player_flutter/custom_widgets/circular_image.dart';
+import 'package:a_music_player_flutter/ui/album/widgets/album_track_widget.dart';
 import 'package:a_music_player_flutter/utils/custom_colors.dart';
 import 'package:a_music_player_flutter/utils/utils.dart';
 import 'package:a_music_player_flutter/utils/widget_extensions.dart';
@@ -27,7 +30,6 @@ class AlbumScreen extends StatelessWidget {
           var album = state.data;
           if (album == null) return Text(state.msg ?? "").wrapCenter();
           // var size = MediaQuery.of(context).size;
-
           return Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
@@ -39,7 +41,7 @@ class AlbumScreen extends StatelessWidget {
                 ],
               ),
             ),
-            child: Column(
+            child: Stack(
               children: [
                 IntrinsicHeight(
                   child: Row(
@@ -48,14 +50,14 @@ class AlbumScreen extends StatelessWidget {
                         decoration: const BoxDecoration(
                           boxShadow: [
                             BoxShadow(
-                              blurRadius: 100,
+                              blurRadius: 10,
                               blurStyle: BlurStyle.outer,
                             )
                           ],
                         ),
                         child: Image.asset(
-                          height: 200,
-                          width: 200,
+                          height: 180,
+                          width: 180,
                           Utils.getImagePath("music_2"),
                           fit: BoxFit.cover,
                         ),
@@ -69,8 +71,9 @@ class AlbumScreen extends StatelessWidget {
                             style: const TextStyle(
                               fontWeight: FontWeight.w600,
                               fontSize: 20,
+                              color: Colors.white,
                             ),
-                          ),
+                          ).flexible(),
                           Row(
                             children: [
                               CircularImage(
@@ -82,38 +85,50 @@ class AlbumScreen extends StatelessWidget {
                                   text: album.artists.first.name,
                                   children: [
                                     TextSpan(
-                                      text:
-                                          " • ${album.releaseDate} • ${album.totalTracks} songs, ",
+                                      text: " • ${album.totalTracks} Songs",
                                       style: const TextStyle(
                                         color: Colors.white,
                                         fontSize: 14,
                                       ),
                                     ),
-                                    TextSpan(
-                                      text: album.tracks?.items.fold(
-                                        "",
-                                        (previousValue, element) =>
-                                            element.totalTracks.toString() +
-                                            previousValue!,
-                                      ),
-                                      style: TextStyle(
-                                        color: Colors.white.withOpacity(.5),
-                                        fontSize: 14,
-                                      ),
-                                    ),
+                                    // TextSpan(
+                                    //   text: album.tracks?.total.toString(),
+                                    //   style: TextStyle(
+                                    //     color: Colors.white.withOpacity(.5),
+                                    //     fontSize: 14,
+                                    //   ),
+                                    // ),
                                   ],
                                   style: TextStyle(
                                     color: Colors.white,
+                                    fontWeight: FontWeight.w500,
                                   ),
                                 ),
                               ).padding(left: 5)
                             ],
                           ).padding(top: 10),
                         ],
-                      ).paddingAll(20).expanded()
+                      ).paddingWithSymmetry(horizontal: 20).expanded()
                     ],
                   ).paddingAll(20),
                 ),
+                Positioned(
+                  top: 220,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  child: ClipRect(
+                    child: BackdropFilter(
+                      filter: ImageFilter.blur(
+                        sigmaX: 15,
+                        sigmaY: 15,
+                      ),
+                      child: ListView(
+                        children: List.generate(10, (index) => AlbumTrackWidget()),
+                      ),
+                    ),
+                  ),
+                )
               ],
             ),
           );
