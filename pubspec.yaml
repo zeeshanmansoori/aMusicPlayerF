@@ -25,6 +25,9 @@ dependencies:
   shared_repo:
     path: packages/shared_repo
   shared_preferences: ^2.1.2
+  palette_generator: ^0.3.3+2
+#  flutter_cache_manager: ^3.3.0
+  cached_network_image: ^3.0.0
 
 
 

@@ -23,8 +23,22 @@ class HomeCubit extends Cubit<HomeState> {
       data: result.body,
       message: result.toMessage(),
     ));
-    if(result.status == RequestStatus.UN_AUTHORIZE){
+    if (result.status == RequestStatus.UN_AUTHORIZE) {
       _client.getAccessToken(_getAlbums);
     }
+  }
+
+  void onColorGenerated(String id,int color) {
+    Map<String, int> map = Map.from(state.palette);
+    map[id] = color;
+    emit(state.copyWith(palette: map));
+  }
+
+  int? getGeneratedColor(String id) {
+    return state.palette[id];
+  }
+
+  bool isColorFetched(String id) {
+    return state.palette.containsKey(id);
   }
 }

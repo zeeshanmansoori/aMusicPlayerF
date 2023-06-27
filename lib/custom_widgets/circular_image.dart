@@ -1,8 +1,9 @@
 import 'package:a_music_player_flutter/utils/utils.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
-class CircularImage extends StatelessWidget {
-  const CircularImage({
+class CustomImage extends StatelessWidget {
+  const CustomImage({
     super.key,
     this.size,
     required this.url,
@@ -13,27 +14,25 @@ class CircularImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-    return Container(
-      clipBehavior: Clip.antiAlias,
-      decoration: const BoxDecoration(
-        shape: BoxShape.circle,
-      ),
-      child: _isLocalUri()?Image.asset(
-        Utils.getImagePath(url),
-        height: size,
-        width: size,
-        fit: BoxFit.cover,
-      ):Image.network(
-        url,
-        height: size,
-        width: size,
-        fit: BoxFit.cover,
-      ),
-    );
+    return _isLocalUri()
+        ? Image.asset(
+            Utils.getImagePath(url),
+            height: size,
+            width: size,
+            fit: BoxFit.cover,
+          )
+        : CachedNetworkImage(
+            height: size,
+            width: size,
+            fit: BoxFit.cover,
+            imageUrl: url,
+            progressIndicatorBuilder: (context, str, progress) {
+              return CircularProgressIndicator();
+            },
+          );
   }
 
-  bool _isLocalUri(){
+  bool _isLocalUri() {
     return url.startsWith("assets/");
   }
 }

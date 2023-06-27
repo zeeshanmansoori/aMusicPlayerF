@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:a_music_player_flutter/utils/custom_colors.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
@@ -27,5 +28,9 @@ class PlayerCubit extends Cubit<PlayerState> {
         ),
       );
     });
+  }
+
+  void updateColor(int? color) {
+    emit(state.copyWith(primaryColor: color));
   }
 }

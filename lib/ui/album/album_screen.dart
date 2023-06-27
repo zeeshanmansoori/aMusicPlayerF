@@ -4,21 +4,31 @@ import 'package:a_music_player_flutter/cubits/album/album_cubit.dart';
 import 'package:a_music_player_flutter/custom_widgets/circular_image.dart';
 import 'package:a_music_player_flutter/ui/album/widgets/album_track_widget.dart';
 import 'package:a_music_player_flutter/utils/custom_colors.dart';
-import 'package:a_music_player_flutter/utils/utils.dart';
 import 'package:a_music_player_flutter/utils/widget_extensions.dart';
 import 'package:api_client_repo/api_client.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
 
-class AlbumScreen extends StatelessWidget {
+class AlbumScreen extends StatefulWidget {
   const AlbumScreen({super.key});
 
   static const String routeName = "/albumScreen";
 
   @override
+  State<AlbumScreen> createState() => _AlbumScreenState();
+}
+
+class _AlbumScreenState extends State<AlbumScreen> {
+  @override
   Widget build(BuildContext context) {
-    var albumId = ModalRoute.of(context)!.settings.arguments as String;
+    var args =
+        ModalRoute.of(context)!.settings.arguments as Map<String, Object?>;
+    var albumId = args["id"].toString();
+    var bgColor = args["color"] == null
+        ? CustomColors.colorPrimary
+        : Color(args["color"] as int);
+
     return BlocProvider(
       create: (BuildContext context) =>
           AlbumCubit(context.read<ApiClient>(), albumId),
@@ -36,7 +46,7 @@ class AlbumScreen extends StatelessWidget {
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [
-                  CustomColors.colorPrimary,
+                  bgColor,
                   Colors.black87,
                 ],
               ),
@@ -56,10 +66,9 @@ class AlbumScreen extends StatelessWidget {
                               )
                             ],
                           ),
-                          child: Image.asset(
-                            height: 180,
-                            Utils.getImagePath("music_2"),
-                            fit: BoxFit.cover,
+                          child: CustomImage(
+                            url: album.images.first.url,
+                            size: 180,
                           ),
                         ).expanded(flex: 45),
                         Column(
@@ -76,17 +85,17 @@ class AlbumScreen extends StatelessWidget {
                             ),
                             Row(
                               children: [
-                                CircularImage(
+                                CustomImage(
                                   url: album.images.first.url,
                                   size: 20,
-                                ),
+                                ).padding(right: 5),
                                 RichText(
-                                  overflow: TextOverflow.ellipsis,
+                                  overflow: TextOverflow.visible,
                                   text: TextSpan(
                                     text: album.artists.first.name,
                                     children: [
                                       TextSpan(
-                                        text: " • ${album.totalTracks} Songs",
+                                        text: "• ${album.totalTracks} Songs",
                                         style: const TextStyle(
                                           color: Colors.white,
                                           fontSize: 14,
@@ -105,7 +114,7 @@ class AlbumScreen extends StatelessWidget {
                                       fontWeight: FontWeight.w500,
                                     ),
                                   ),
-                                ).padding(left: 5)
+                                ).expanded()
                               ],
                             ).padding(top: 10),
                           ],

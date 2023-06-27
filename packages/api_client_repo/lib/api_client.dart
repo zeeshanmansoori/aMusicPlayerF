@@ -10,7 +10,9 @@ import 'package:shared_repo/models/albums_response.dart';
 class ApiClient {
   static ApiClient? _instance;
   static String accessToken =
-      "BQDpEHy-hjwsUSqL75vQHZ3Z1WaBXl80w-bdnAKoxBuoH0NHGdtfdvS0v0bAbkeimpeHbT0MC-kJ3SwfXZl6dICfv0gHPW0RlcW0Tqdzz0y5b2GHWWo";
+      "BQChqCP8Mqd4aIcQ0Ro727MZLDRiwD4f75vg5eou2y0y9LcKSKcPh8fA1X4Q7gXZq7NaP1rUCuNke3iMx6WU49BY4FCyErmB7g-R7IDgzBuKFjNZsMw";
+
+  var useApi = true;
 
   static ApiClient getInstance() {
     _instance ??= ApiClient();
@@ -55,9 +57,11 @@ class ApiClient {
   }
 
   Future<RequestStatus<AlbumsResponse>> getNewAlbums() async {
-    return RequestStatus.success(
-      body: AlbumsResponse.dummy(),
-    );
+    if (!useApi) {
+      return RequestStatus.success(
+        body: AlbumsResponse.dummy(),
+      );
+    }
     var uri = Uri.https(
       baseUrl,
       "/v1/browse/new-releases",
@@ -69,14 +73,16 @@ class ApiClient {
   }
 
   Future<RequestStatus<AlbumResponse>> getAlbum(String albumId) async {
-    return RequestStatus.success(body: AlbumResponse.dummy());
+    if (!useApi) {
+      return RequestStatus.success(body: AlbumResponse.dummy());
+    }
     var uri = Uri.https(
       baseUrl,
       "/v1/albums/$albumId",
     );
     return runWithCatch(
-          () => http.get(uri, headers: header),
-          (decodedBody) => AlbumResponse.fromJson(decodedBody),
+      () => http.get(uri, headers: header),
+      (decodedBody) => AlbumResponse.fromJson(decodedBody),
     );
   }
 

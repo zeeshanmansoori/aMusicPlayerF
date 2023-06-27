@@ -106,20 +106,26 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
         //     // ),
         //   ),
         // ),
-        bottomNavigationBar: NavigationBar(
-          height: Constants.bottomNavHeight,
-          selectedIndex: _selectedIndex,
-          destinations: MainScreen.navItems
-              .map(
-                (e) => NavigationDestination(
-                  icon: Icon(e.icon),
-                  label: e.title,
-                ),
-              )
-              .toList(),
-          onDestinationSelected: (index) {
-            handleNestedNavigation(index);
-            updateBottomNav(index);
+        bottomNavigationBar: BlocBuilder<PlayerCubit, PlayerState>(
+          buildWhen: (p, c) => p.primaryColor != c.primaryColor,
+          builder: (context, state) {
+            return NavigationBar(
+              height: Constants.bottomNavHeight,
+              selectedIndex: _selectedIndex,
+              destinations: MainScreen.navItems
+                  .map(
+                    (e) => NavigationDestination(
+                      icon: Icon(e.icon),
+                      label: e.title,
+                    ),
+                  )
+                  .toList(),
+              onDestinationSelected: (index) {
+                handleNestedNavigation(index);
+                updateBottomNav(index);
+              },
+              indicatorColor: Color(state.primaryColor),
+            );
           },
         ),
         body: WillPopScope(
