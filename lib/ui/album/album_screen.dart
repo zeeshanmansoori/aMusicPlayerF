@@ -19,9 +19,9 @@ class AlbumScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var albumId = ModalRoute.of(context)!.settings.arguments as String;
-
     return BlocProvider(
-      create: (BuildContext context) => AlbumCubit(context.read<ApiClient>(),albumId),
+      create: (BuildContext context) =>
+          AlbumCubit(context.read<ApiClient>(), albumId),
       child: BlocBuilder<AlbumCubit, AlbumState>(
         builder: (context, state) {
           if (state.apiStatus.isInProgress) {
@@ -41,95 +41,101 @@ class AlbumScreen extends StatelessWidget {
                 ],
               ),
             ),
-            child: Stack(
-              children: [
-                IntrinsicHeight(
-                  child: Row(
-                    children: [
-                      Container(
-                        decoration: const BoxDecoration(
-                          boxShadow: [
-                            BoxShadow(
-                              blurRadius: 10,
-                              blurStyle: BlurStyle.outer,
-                            )
-                          ],
-                        ),
-                        child: Image.asset(
-                          height: 180,
-                          width: 180,
-                          Utils.getImagePath("music_2"),
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Text(
-                            album.name,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 20,
-                              color: Colors.white,
-                            ),
-                          ).flexible(),
-                          Row(
-                            children: [
-                              CircularImage(
-                                url: album.images.first.url,
-                                size: 20,
-                              ),
-                              RichText(
-                                text: TextSpan(
-                                  text: album.artists.first.name,
-                                  children: [
-                                    TextSpan(
-                                      text: " • ${album.totalTracks} Songs",
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 14,
-                                      ),
-                                    ),
-                                    // TextSpan(
-                                    //   text: album.tracks?.total.toString(),
-                                    //   style: TextStyle(
-                                    //     color: Colors.white.withOpacity(.5),
-                                    //     fontSize: 14,
-                                    //   ),
-                                    // ),
-                                  ],
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ).padding(left: 5)
+            child: SafeArea(
+              child: Stack(
+                children: [
+                  IntrinsicHeight(
+                    child: Row(
+                      children: [
+                        Container(
+                          decoration: const BoxDecoration(
+                            boxShadow: [
+                              BoxShadow(
+                                blurRadius: 10,
+                                blurStyle: BlurStyle.outer,
+                              )
                             ],
-                          ).padding(top: 10),
-                        ],
-                      ).paddingWithSymmetry(horizontal: 20).expanded()
-                    ],
-                  ).paddingAll(20),
-                ),
-                Positioned(
-                  top: 220,
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                  child: ClipRect(
-                    child: BackdropFilter(
-                      filter: ImageFilter.blur(
-                        sigmaX: 15,
-                        sigmaY: 15,
-                      ),
-                      child: ListView(
-                        children: List.generate(10, (index) => AlbumTrackWidget()),
+                          ),
+                          child: Image.asset(
+                            height: 180,
+                            Utils.getImagePath("music_2"),
+                            fit: BoxFit.cover,
+                          ),
+                        ).expanded(flex: 45),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Text(
+                              album.name,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 20,
+                                color: Colors.white,
+                              ),
+                            ).flexible(),
+                            Row(
+                              children: [
+                                CircularImage(
+                                  url: album.images.first.url,
+                                  size: 20,
+                                ),
+                                RichText(
+                                  overflow: TextOverflow.ellipsis,
+                                  text: TextSpan(
+                                    text: album.artists.first.name,
+                                    children: [
+                                      TextSpan(
+                                        text: " • ${album.totalTracks} Songs",
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                      // TextSpan(
+                                      //   text: album.tracks?.total.toString(),
+                                      //   style: TextStyle(
+                                      //     color: Colors.white.withOpacity(.5),
+                                      //     fontSize: 14,
+                                      //   ),
+                                      // ),
+                                    ],
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ).padding(left: 5)
+                              ],
+                            ).flexible().padding(top: 10),
+                          ],
+                        )
+                            .paddingWithSymmetry(horizontal: 20)
+                            .expanded(flex: 55),
+                      ],
+                    ).paddingAll(20),
+                  ),
+                  Positioned(
+                    top: 220,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    child: ClipRect(
+                      child: BackdropFilter(
+                        filter: ImageFilter.blur(
+                          sigmaX: 15,
+                          sigmaY: 15,
+                        ),
+                        child: ListView(
+                          children: album.tracks!.items
+                              .map((e) => AlbumTrackWidget(item: e))
+                              .toList(),
+                        ),
                       ),
                     ),
-                  ),
-                )
-              ],
+                  )
+                ],
+              ),
             ),
           );
         },

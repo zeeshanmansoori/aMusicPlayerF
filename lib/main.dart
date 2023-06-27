@@ -98,14 +98,14 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
         return PlayerCubit();
       },
       child: Scaffold(
-        appBar: PreferredSize(
-          preferredSize: Size.zero,
-          child: AppBar(
-            systemOverlayStyle: SystemUiOverlayStyle.dark.copyWith(
-              statusBarColor: Colors.white,
-            ),
-          ),
-        ),
+        // appBar: PreferredSize(
+        //   preferredSize: Size.zero,
+        //   child: AppBar(
+        //     // systemOverlayStyle: SystemUiOverlayStyle.dark.copyWith(
+        //       // statusBarColor: Colors.white,
+        //     // ),
+        //   ),
+        // ),
         bottomNavigationBar: NavigationBar(
           height: Constants.bottomNavHeight,
           selectedIndex: selectedIndex,

@@ -15,6 +15,28 @@ class RequestStatus<T> {
     this.body,
   );
 
-  static final SOMETHING_WENT_WRONG = RequestStatus(FAILURE,"Something went wrong",null);
-  static final CHECK_INTERNET_CONNECTION = RequestStatus(FAILURE,"Check your internet connection",null);
+  factory RequestStatus.success({
+    String? msg,
+    T? body,
+  }) =>
+      RequestStatus(
+        SUCCESS,
+        msg??"",
+        body,
+      );
+
+  factory RequestStatus.failure(
+      String msg,
+      T? body,
+      ) =>
+      RequestStatus(
+        FAILURE,
+        msg,
+        body,
+      );
+
+  static final SOMETHING_WENT_WRONG =
+      RequestStatus(FAILURE, "Something went wrong", null);
+  static final CHECK_INTERNET_CONNECTION =
+      RequestStatus(FAILURE, "Check your internet connection", null);
 }

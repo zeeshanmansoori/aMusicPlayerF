@@ -18,10 +18,10 @@ class Tracks {
     var offset = json['offset'];
     var previous = json['previous'];
     var total = json['total'];
-    var items = <TrackItemsResponse>[];
+    var items = <AlbumTrackItemResponse>[];
     if (json['items'] != null) {
       json['items'].forEach((v) {
-        items.add(TrackItemsResponse.fromJson(v));
+        items.add(AlbumTrackItemResponse.fromJson(v));
       });
     }
     return Tracks(
@@ -41,7 +41,7 @@ class Tracks {
   int offset;
   String? previous;
   int total;
-  List<TrackItemsResponse> items;
+  List<AlbumTrackItemResponse> items;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};

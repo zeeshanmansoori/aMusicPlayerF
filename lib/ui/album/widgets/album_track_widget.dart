@@ -1,15 +1,21 @@
 import 'package:a_music_player_flutter/utils/widget_extensions.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_repo/model_exports.dart';
 
 class AlbumTrackWidget extends StatelessWidget {
-  const AlbumTrackWidget({super.key});
+  const AlbumTrackWidget({
+    super.key,
+    required this.item,
+  });
+
+  final AlbumTrackItemResponse item;
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
         Text(
-          "1",
+          item.name,
         ).padding(right: 20),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,

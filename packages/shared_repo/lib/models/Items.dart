@@ -3,7 +3,7 @@ import 'package:shared_repo/models/image_response.dart';
 
 class Items {
     final List<ImageResponse> images;
-    final List<String> availableMarkets;
+    // final List<String> availableMarkets;
     // final ReleaseDatePrecision releaseDatePrecision;
     // final AlbumTypeEnum type;
     final String uri;
@@ -17,7 +17,7 @@ class Items {
 
     Items({
         required this.images,
-        required this.availableMarkets,
+        // required this.availableMarkets,
         // required this.releaseDatePrecision,
         // required this.type,
         required this.uri,
@@ -35,8 +35,8 @@ class Items {
         return Items(
           images: List<ImageResponse>.from(
               json["images"].map((x) => ImageResponse.fromJson(x))),
-          availableMarkets:
-              List<String>.from(json["available_markets"].map((x) => x)),
+          // availableMarkets:
+          //     List<String>.from(json["available_markets"].map((x) => x)),
           // releaseDatePrecision: releaseDatePrecisionValues.map[json["release_date_precision"]]!,
           // type: albumTypeEnumValues.map[json["type"]]!,
           uri: json["uri"],
@@ -53,7 +53,7 @@ class Items {
 
     Map<dynamic, dynamic> toJson() => {
         "images": List<dynamic>.from(images.map((x) => x.toJson())),
-        "available_markets": List<dynamic>.from(availableMarkets.map((x) => x)),
+        // "available_markets": List<dynamic>.from(availableMarkets.map((x) => x)),
         // "release_date_precision": releaseDatePrecisionValues.reverse[releaseDatePrecision],
         // "type": albumTypeEnumValues.reverse[type],
         "uri": uri,
