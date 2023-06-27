@@ -73,7 +73,7 @@ class AlbumScreen extends StatelessWidget {
                                 fontSize: 20,
                                 color: Colors.white,
                               ),
-                            ).flexible(),
+                            ),
                             Row(
                               children: [
                                 CircularImage(
@@ -107,7 +107,7 @@ class AlbumScreen extends StatelessWidget {
                                   ),
                                 ).padding(left: 5)
                               ],
-                            ).flexible().padding(top: 10),
+                            ).padding(top: 10),
                           ],
                         )
                             .paddingWithSymmetry(horizontal: 20)
