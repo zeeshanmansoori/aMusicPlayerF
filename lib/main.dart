@@ -88,7 +88,7 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
-  var selectedIndex = 0;
+  var _selectedIndex = 0;
   final _navigatorKey = GlobalKey<NavigatorState>();
 
   @override
@@ -108,7 +108,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
         // ),
         bottomNavigationBar: NavigationBar(
           height: Constants.bottomNavHeight,
-          selectedIndex: selectedIndex,
+          selectedIndex: _selectedIndex,
           destinations: MainScreen.navItems
               .map(
                 (e) => NavigationDestination(
@@ -117,50 +117,76 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                 ),
               )
               .toList(),
-          onDestinationSelected: (index) => setState(() {
-            selectedIndex = index;
-            _navigatorKey.currentState?.pushNamed(
-              MainScreen.navItems[index].routeName,
-            );
-          }),
+          onDestinationSelected: (index) {
+            handleNestedNavigation(index);
+            updateBottomNav(index);
+          },
         ),
-        body: Column(
-          children: [
-            Navigator(
-              key: _navigatorKey,
-              initialRoute: MainScreen.navItems.first.routeName,
-              onGenerateRoute: (settings) {
-                late Widget page;
-                switch (settings.name) {
-                  case HomeScreen.routeName || "/":
-                    page = const HomeScreen();
-                    break;
-                  case AlbumsScreen.routeName:
-                    page = const AlbumsScreen();
-                    break;
-                  case ArtistScreen.routeName:
-                    page = const ArtistScreen();
-                    break;
-                  case PlaylistScreen.routeName:
-                    page = const PlaylistScreen();
-                    break;
-                  case AlbumScreen.routeName:
-                    page = const AlbumScreen();
-                    break;
-                }
+        body: WillPopScope(
+          onWillPop: () {
+            var state = _navigatorKey.currentState;
+            var canPop = state?.canPop() ?? false;
+            if (state == null || !canPop) return Future.value(true);
+            // var name = ModalRoute.of(state.context)?.settings.name;
+            updateBottomNav(0);
+            state.popUntil((route) => route.isFirst);
+            return Future(() => false);
+          },
+          child: Column(
+            children: [
+              Navigator(
+                key: _navigatorKey,
+                initialRoute: MainScreen.navItems.first.routeName,
+                onGenerateRoute: (settings) {
+                  late Widget page;
+                  switch (settings.name) {
+                    case HomeScreen.routeName || "/":
+                      page = const HomeScreen();
+                      break;
+                    case AlbumsScreen.routeName:
+                      page = const AlbumsScreen();
+                      break;
+                    case ArtistScreen.routeName:
+                      page = const ArtistScreen();
+                      break;
+                    case PlaylistScreen.routeName:
+                      page = const PlaylistScreen();
+                      break;
+                    case AlbumScreen.routeName:
+                      page = const AlbumScreen();
+                      break;
+                  }
 
-                return MaterialPageRoute<dynamic>(
-                  builder: (context) {
-                    return page;
-                  },
-                  settings: settings,
-                );
-              },
-            ).expanded(),
-            const PlayerStaticBarWidget()
-          ],
+                  return MaterialPageRoute<dynamic>(
+                    builder: (context) {
+                      return page;
+                    },
+                    settings: settings,
+                  );
+                },
+              ).expanded(),
+              const PlayerStaticBarWidget()
+            ],
+          ),
         ),
       ),
     );
+  }
+
+  void handleNestedNavigation(int index) {
+    var navState = _navigatorKey.currentState;
+    var oldRoute = ModalRoute.of(context)?.settings.name;
+    var newRoute = MainScreen.navItems[index].routeName;
+    if (navState == null || newRoute == oldRoute) return;
+    navState.pushNamed(newRoute);
+  }
+
+  void updateBottomNav(int index) {
+    setState(() {
+      if (_selectedIndex != index) {
+        _selectedIndex = index;
+        (index);
+      }
+    });
   }
 }
