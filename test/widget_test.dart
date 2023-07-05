@@ -10,11 +10,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:a_music_player_flutter/main.dart';
+import 'package:spotify_repo/spotify_repo.dart';
 
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget( MyApp(ApiClient()));
+    await tester.pumpWidget( MyApp(SpotifyRepo(ApiClient())));
 
     // Verify that our counter starts at 0.
     expect(find.text('0'), findsOneWidget);

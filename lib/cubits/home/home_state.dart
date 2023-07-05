@@ -1,36 +1,28 @@
 part of 'home_cubit.dart';
 
-class HomeState extends Equatable {
-  final FormzSubmissionStatus apiStatus;
-  final AlbumsResponse? data;
-  final String? message;
+class HomeState extends AbstractState<AlbumsResponse> {
   final Map<String, int> palette;
 
-  const HomeState({
-    this.apiStatus = FormzSubmissionStatus.initial,
-    this.data,
-    this.message,
-    this.palette = const {},
-  });
-
   @override
-  List<Object?> get props => [
-        apiStatus,
-        data,
-        palette,
-        message,
-      ];
+  List<Object?> get props => [...super.props,palette];
+
+  const HomeState({
+    ApiResult<AlbumsResponse?>? apiResult,
+    String? msg,
+    this.palette = const {},
+  }) : super(
+          apiResult: apiResult ?? ApiResult.initial,
+          msg: msg,
+        );
 
   HomeState copyWith({
-    FormzSubmissionStatus? apiStatus,
-    AlbumsResponse? data,
-    String? message,
+    ApiResult<AlbumsResponse?>? apiResult,
     Map<String, int>? palette,
+    String? msg,
   }) {
     return HomeState(
-      apiStatus: apiStatus ?? this.apiStatus,
-      data: data ?? this.data,
-      message: message ?? this.message,
+      apiResult: apiResult ?? this.apiResult,
+      msg: msg ?? this.msg,
       palette: palette ?? this.palette,
     );
   }

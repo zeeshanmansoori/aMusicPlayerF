@@ -2,24 +2,20 @@ part of 'album_cubit.dart';
 
 class AlbumState extends AbstractState<AlbumResponse> {
   const AlbumState({
-    FormzSubmissionStatus? apiStatus,
+    ApiResult<AlbumResponse?>? apiResult,
     String? msg,
-    AlbumResponse? data,
   }) : super(
-          data: data,
+          apiResult: apiResult ?? ApiResult.initial,
           msg: msg,
-          apiStatus: apiStatus ?? FormzSubmissionStatus.initial,
         );
 
   AlbumState copyWith({
-    FormzSubmissionStatus? apiStatus,
+    ApiResult<AlbumResponse?>? apiResult,
     String? msg,
-    AlbumResponse? data,
   }) {
     return AlbumState(
-      apiStatus: apiStatus ?? this.apiStatus,
+      apiResult: apiResult ?? this.apiResult,
       msg: msg ?? this.msg,
-      data: data ?? this.data,
     );
   }
 }

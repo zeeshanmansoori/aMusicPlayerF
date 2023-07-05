@@ -8,7 +8,7 @@ import 'package:a_music_player_flutter/utils/widget_extensions.dart';
 import 'package:api_client_repo/api_client.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:formz/formz.dart';
+import 'package:spotify_repo/spotify_repo.dart';
 
 class AlbumScreen extends StatefulWidget {
   const AlbumScreen({super.key});
@@ -31,13 +31,13 @@ class _AlbumScreenState extends State<AlbumScreen> {
 
     return BlocProvider(
       create: (BuildContext context) =>
-          AlbumCubit(context.read<ApiClient>(), albumId),
+          AlbumCubit(context.read<SpotifyRepo>(), albumId),
       child: BlocBuilder<AlbumCubit, AlbumState>(
         builder: (context, state) {
-          if (state.apiStatus.isInProgress) {
+          if (state.apiResult.isLoading) {
             return const CircularProgressIndicator().wrapCenter();
           }
-          var album = state.data;
+          var album = state.apiResult.body;
           if (album == null) return Text(state.msg ?? "").wrapCenter();
           // var size = MediaQuery.of(context).size;
           return Container(
@@ -109,7 +109,7 @@ class _AlbumScreenState extends State<AlbumScreen> {
                                       //   ),
                                       // ),
                                     ],
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.w500,
                                     ),

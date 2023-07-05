@@ -1,30 +1,25 @@
-import 'package:a_music_player_flutter/utils/extensions.dart';
-import 'package:api_client_repo/api_client.dart';
-import 'package:bloc/bloc.dart';
-import 'package:equatable/equatable.dart';
-import 'package:formz/formz.dart';
-import 'package:shared_repo/model_exports.dart';
+import 'package:a_music_player_flutter/utils/base/cubit/abstract_cubit.dart';
 import 'package:shared_repo/models/albums_response.dart';
+import 'package:shared_repo/models/api_result.dart';
+import 'package:spotify_repo/spotify_repo.dart';
 
 part 'home_state.dart';
 
-class HomeCubit extends Cubit<HomeState> {
-  final ApiClient _client;
+class HomeCubit extends AbstractCubit<HomeState> {
+  final SpotifyRepo _repo;
 
-  HomeCubit(this._client) : super(const HomeState()) {
+  HomeCubit(this._repo) : super(const HomeState()) {
     _getAlbums();
   }
 
   void _getAlbums() async {
-    emit(state.copyWith(apiStatus: FormzSubmissionStatus.inProgress));
-    var result = await _client.getNewAlbums();
+    emit(state.copyWith(apiResult: ApiResult.loading()));
+    var result = await _repo.getNewAlbums();
     emit(state.copyWith(
-      apiStatus: result.toApiStatus(),
-      data: result.body,
-      message: result.toMessage(),
+      apiResult: result,
     ));
-    if (result.status == RequestStatus.UN_AUTHORIZE) {
-      _client.getAccessToken(_getAlbums);
+    if (result.isUnAuthorized) {
+      _repo.getAccessToken(_getAlbums);
     }
   }
 

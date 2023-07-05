@@ -6,11 +6,12 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:shared_repo/model_exports.dart';
 import 'package:shared_repo/models/albums_response.dart';
+import 'package:shared_repo/models/api_result.dart';
 
 class ApiClient {
   static ApiClient? _instance;
   static String accessToken =
-      "BQChqCP8Mqd4aIcQ0Ro727MZLDRiwD4f75vg5eou2y0y9LcKSKcPh8fA1X4Q7gXZq7NaP1rUCuNke3iMx6WU49BY4FCyErmB7g-R7IDgzBuKFjNZsMw";
+      " BQDp31ydUV0_j7Sw7duGAqHXc02EGpGmku_Hn5HP0Ewdl-HhcFY7Ek0RlUCLHSir2d7wC2PShliCBlOEQmYNer5noYxk7OQrrFixjZn9YFpG3elHlLU";
 
   var useApi = true;
 
@@ -56,9 +57,9 @@ class ApiClient {
     }
   }
 
-  Future<RequestStatus<AlbumsResponse>> getNewAlbums() async {
+  Future<ApiResult<AlbumsResponse>> getNewAlbums() async {
     if (!useApi) {
-      return RequestStatus.success(
+      return ApiResult.success(
         body: AlbumsResponse.dummy(),
       );
     }
@@ -72,9 +73,9 @@ class ApiClient {
     );
   }
 
-  Future<RequestStatus<AlbumResponse>> getAlbum(String albumId) async {
+  Future<ApiResult<AlbumResponse>> getAlbum(String albumId) async {
     if (!useApi) {
-      return RequestStatus.success(body: AlbumResponse.dummy());
+      return ApiResult.success(body: AlbumResponse.dummy());
     }
     var uri = Uri.https(
       baseUrl,
@@ -86,7 +87,7 @@ class ApiClient {
     );
   }
 
-  Future<RequestStatus<List<dynamic>>> getGenres() async {
+  Future<ApiResult<List<dynamic>>> getGenres() async {
     var uri = Uri.https(
       baseUrl,
       "/v1/recommendations/available-genre-seeds",
@@ -99,7 +100,20 @@ class ApiClient {
     );
   }
 
-  Future<RequestStatus<T>> runWithCatch<T>(
+  Future<ApiResult<List<ArtistResponse>>> getArtists(List<String> artistIds) {
+    var uri = Uri.https(
+      baseUrl,
+      "/v1/artists",
+    );
+    return runWithCatch(
+      () => http.get(uri, headers: header),
+      (decodedBody) => (decodedBody["artists"] as Iterable)
+          .map((e) => ArtistResponse.fromJson(e))
+          .toList(),
+    );
+  }
+
+  Future<ApiResult<T>> runWithCatch<T>(
     Future<http.Response> Function() getResponse,
     T Function(dynamic decodedBody) getDataFromBody,
   ) async {
@@ -108,8 +122,8 @@ class ApiClient {
       if (response.statusCode == 200) {
         var decodedData = getDataFromBody.call(jsonDecode(response.body));
 
-        return RequestStatus(
-          RequestStatus.SUCCESS,
+        return ApiResult(
+          ApiResult.SUCCESS,
           "",
           decodedData,
         );
@@ -120,11 +134,11 @@ class ApiClient {
     }
   }
 
-  RequestStatus<T> _checkErrorCode<T>(http.Response response) {
+  ApiResult<T> _checkErrorCode<T>(http.Response response) {
     log("ApiClient _checkErrorCode ${response.statusCode} ${response.body}");
     if (response.statusCode == 401) {
-      return RequestStatus<T>(
-        RequestStatus.UN_AUTHORIZE,
+      return ApiResult<T>(
+        ApiResult.UN_AUTHORIZE,
         "Session Expired!",
         null,
       );
@@ -139,7 +153,7 @@ class ApiClient {
           jsonDecode(response.body)['error'] ??
           jsonDecode(response.body)['error_message'] ??
           'Something went wrong';
-      return RequestStatus<T>(RequestStatus.FAILURE, msg, null);
+      return ApiResult<T>(ApiResult.FAILURE, msg, null);
     } else {
       ////print("Status Code: ${response.statusCode}");
       print("ApiClient Reason phase: ${response.reasonPhrase}");
@@ -148,20 +162,20 @@ class ApiClient {
   }
 
   /// Used inside every catch block of api call
-  /// It returns Failed [RequestStatus] with appropriate message
-  RequestStatus<T> _commonCatchBlock<T>(e, StackTrace stackTrace) {
+  /// It returns Failed [ApiResult] with appropriate message
+  ApiResult<T> _commonCatchBlock<T>(e, StackTrace stackTrace) {
     var completer = Completer();
     completer.completeError(e, stackTrace);
     print("ApiClient  _commonCatchBlock $stackTrace");
     if (e is TimeoutException || e is SocketException) {
-      return RequestStatus<T>(
-        RequestStatus.FAILURE,
+      return ApiResult<T>(
+        ApiResult.FAILURE,
         'Check internet connection',
         null,
       );
     }
-    return RequestStatus<T>(
-      RequestStatus.FAILURE,
+    return ApiResult<T>(
+      ApiResult.FAILURE,
       'Something went wrong',
       null,
     );

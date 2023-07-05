@@ -1,21 +1,19 @@
 part of 'abstract_cubit.dart';
 
 abstract class AbstractState<T> extends Equatable {
-  final FormzSubmissionStatus apiStatus;
+  final ApiResult<T?> apiResult;
   final String? msg;
-  final T? data;
 
   const AbstractState({
-    required this.data,
-    required this.msg,
-    required this.apiStatus,
+    this.msg,
+    this.apiResult = ApiResult.initial,
   });
 
+  /// override this when you have extra fields in your state.
   @override
   List<Object?> get props => [
-        apiStatus,
+        apiResult,
         msg,
-        data,
       ];
 
 }

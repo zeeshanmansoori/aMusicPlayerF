@@ -12,12 +12,11 @@ import 'package:api_client_repo/api_client.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:spotify_repo/spotify_repo.dart';
 
 void main() {
-  var client = ApiClient.getInstance(
+  var _client = ApiClient.getInstance(
     // () async {
     //   var shared = await SharedPreferences.getInstance();
     //   return shared.getString(Constants.accessToken);
@@ -27,13 +26,15 @@ void main() {
     //   shared.setString(Constants.accessToken, token);
     // },
   );
-  runApp(MyApp(client));
+  var repo = SpotifyRepo(_client);
+  runApp(MyApp(repo));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp(this.client, {super.key});
+  const MyApp(this.spotifyRepo, {super.key});
 
-  final ApiClient client;
+  // final ApiClient client;
+  final SpotifyRepo spotifyRepo;
 
   // This widget is the root of your application.
   @override
@@ -46,7 +47,7 @@ class MyApp extends StatelessWidget {
       themeMode: ThemeMode.system,
       home: MultiRepositoryProvider(
         providers: [
-          RepositoryProvider(create: (c) => client),
+          RepositoryProvider(create: (c) => spotifyRepo),
         ],
         child: const MainScreen(),
         // child: Scaffold(
