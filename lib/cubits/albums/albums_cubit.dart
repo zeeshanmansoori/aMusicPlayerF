@@ -18,9 +18,6 @@ class AlbumsCubit extends AbstractCubit<AlbumsState> {
     emit(state.copyWith(
       apiResult: result,
     ));
-    if (result.isUnAuthorized) {
-      _repo.getAccessToken(_getAlbums);
-    }
   }
 
 }

@@ -11,7 +11,7 @@ import 'package:shared_repo/models/api_result.dart';
 class ApiClient {
   static ApiClient? _instance;
   static String accessToken =
-      "BQD9WjajOxcMrD6gcFVZSqQbTj_X906PkudWp3zZEUeSgadWIwQvedJ3l092EoQB8gGU6pc6r7P8GZKOl9AvehtfzJMLy7eF66Kyz7EFz1qlT6MoT6Q";
+      "BQCwjxDQOp4Eqrgf1pb83exHcFe6R7KXXhVKhe2g8rrzjsrCS9DgzQbG9CeaEfrFE1TJrXWiOE21ru99QtDkqN-neQ5egwPULMf6sKMnCvQdwEfmXoA";
 
   var useApi = true;
 
@@ -102,11 +102,14 @@ class ApiClient {
 
   Future<ApiResult<List<ArtistResponse>>> getArtists(List<String> artistIds) {
     var uri = Uri.https(
-      baseUrl,
-      "/v1/artists",
-    );
+        baseUrl, "/v1/artists", {
+      "ids": artistIds.reduce((value, element) => "$value,$element"),
+    });
     return runWithCatch(
-      () => http.get(uri, headers: header),
+          () => http.get(
+        uri,
+        headers: header,
+      ),
       (decodedBody) => (decodedBody["artists"] as Iterable)
           .map((e) => ArtistResponse.fromJson(e))
           .toList(),

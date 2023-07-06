@@ -8,6 +8,7 @@ class SpotifyRepo {
   final ApiClient _client;
   final List<String> artistIds = [];
   ApiResult<AlbumsResponse>? cachedAlbums;
+  ApiResult<List<ArtistResponse>>? cachedArtists;
 
   SpotifyRepo(this._client);
 
@@ -28,8 +29,11 @@ class SpotifyRepo {
     return result;
   }
 
-  Future<ApiResult<List<ArtistResponse>>> getArtists() {
-    return _client.getArtists(artistIds);
+  Future<ApiResult<List<ArtistResponse>>> getArtists({bool useCache = true}) {
+    if (useCache && cachedArtists != null) {
+      return Future.value(cachedArtists);
+    }
+    return _client.getArtists(artistIds).then((value) => cachedArtists = value);
   }
 
   void getAccessToken(void Function() onSuccess) {

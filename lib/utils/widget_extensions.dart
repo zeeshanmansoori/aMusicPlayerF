@@ -57,10 +57,12 @@ extension WidgetExtensions on Widget {
   Widget asButton({
     void Function()? onClick,
     void Function()? onDoubleClick,
+    BorderRadius? radius,
   }) {
     return InkWell(
       onTap: onClick,
       onDoubleTap: onDoubleClick,
+      borderRadius: radius,
       child: this,
     );
   }
@@ -77,7 +79,6 @@ extension WidgetExtensions on Widget {
       onLongPressDown: onLongPressDown,
       onLongPressCancel: onLongPressUp,
       onLongPress: () {
-        print("zeeshan onLongPress");
       },
       child: this,
     );

@@ -133,10 +133,14 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
           onWillPop: () {
             var state = _navigatorKey.currentState;
             var canPop = state?.canPop() ?? false;
+
             if (state == null || !canPop) return Future.value(true);
-            // var name = ModalRoute.of(state.context)?.settings.name;
+            var name = ModalRoute.of(state.context)!.settings.name;
+            print("zeeshan navName ${name}");
+            // state.popUntil((route) => route.isFirst);
+             state.pop();
+
             updateBottomNav(0);
-            state.popUntil((route) => route.isFirst);
             return Future(() => false);
           },
           child: Column(

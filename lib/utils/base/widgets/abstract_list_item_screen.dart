@@ -5,11 +5,18 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 abstract class AbstractListItemScreen<T, C extends AbstractCubit<S>,
     S extends AbstractState<RT>, RT> extends StatelessWidget {
-  const AbstractListItemScreen({super.key});
+  const AbstractListItemScreen({
+    super.key,
+    this.gridDelegate,
+    this.gridPadding,
+  });
+
+  final SliverGridDelegate? gridDelegate;
+  final EdgeInsets? gridPadding;
 
   C getCubit(BuildContext context);
 
-  Widget getListWidget(C cubit,BuildContext context, T item);
+  Widget getListWidget(C cubit, BuildContext context, T item);
 
   List<T> getItems(RT body);
 
@@ -30,10 +37,13 @@ abstract class AbstractListItemScreen<T, C extends AbstractCubit<S>,
             var items = getItems(data);
             var cubit =  context.read<C>();
             return GridView.builder(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2),
+              padding: gridPadding,
+              gridDelegate: gridDelegate ??
+                  const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                  ),
               itemBuilder: (context, index) =>
-                  getListWidget(cubit,context, items[index]),
+                  getListWidget(cubit, context, items[index]),
               itemCount: items.length,
             );
           },

@@ -59,7 +59,7 @@ class _AlbumScreenState extends State<AlbumScreen> {
                 ],
               ),
             ),
-            duration: const Duration(milliseconds: 200),
+            duration: const Duration(milliseconds: 600),
             child: SafeArea(
               child: Stack(
                 children: [
