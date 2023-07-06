@@ -28,11 +28,12 @@ abstract class AbstractListItemScreen<T, C extends AbstractCubit<S>,
               return Text(state.apiResult.msg).wrapCenter();
             }
             var items = getItems(data);
+            var cubit =  context.read<C>();
             return GridView.builder(
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2),
               itemBuilder: (context, index) =>
-                  getListWidget(getCubit(context),context, items[index]),
+                  getListWidget(cubit,context, items[index]),
               itemCount: items.length,
             );
           },

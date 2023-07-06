@@ -1,24 +1,24 @@
-part of 'home_cubit.dart';
+part of 'albums_cubit.dart';
 
-class HomeState extends AbstractState<AlbumsResponse> {
+class AlbumsState extends AbstractState<AlbumsResponse> {
 
-
-  const HomeState({
+  const AlbumsState({
     ApiResult<AlbumsResponse?>? apiResult,
     String? msg,
+
   }) : super(
           apiResult: apiResult ?? ApiResult.initial,
           msg: msg,
         );
 
-  HomeState copyWith({
+  AlbumsState copyWith({
     ApiResult<AlbumsResponse?>? apiResult,
     String? msg,
   }) {
-    return HomeState(
+    return AlbumsState(
       apiResult: apiResult ?? this.apiResult,
       msg: msg ?? this.msg,
-
+      // palette: palette ?? this.palette,
     );
   }
 }

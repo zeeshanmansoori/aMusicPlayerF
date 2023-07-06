@@ -7,12 +7,17 @@ import 'package:shared_repo/models/artist_response.dart';
 class SpotifyRepo {
   final ApiClient _client;
   final List<String> artistIds = [];
+  ApiResult<AlbumsResponse>? cachedAlbums;
 
   SpotifyRepo(this._client);
 
-  Future<ApiResult<AlbumsResponse>> getNewAlbums() {
+  Future<ApiResult<AlbumsResponse>> getNewAlbums({bool useCache = true}) {
+    if (useCache && cachedAlbums != null) {
+      return Future.value(cachedAlbums);
+    }
     var result = _client.getNewAlbums();
     result.then((value) {
+      cachedAlbums = value;
       var ids = value.body?.items
               .expand((e) => e.artists)
               .map((artist) => artist.id) ??

@@ -1,24 +1,22 @@
-import 'package:bloc/bloc.dart';
-import 'package:equatable/equatable.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:palette_generator/palette_generator.dart';
+import 'package:a_music_player_flutter/utils/base/cubit/abstract_cubit.dart';
+import 'package:shared_repo/model_exports.dart';
+import 'package:shared_repo/models/api_result.dart';
+import 'package:spotify_repo/spotify_repo.dart';
 
 part 'artist_state.dart';
 
-class ArtistCubit extends Cubit<ArtistState> {
-  ArtistCubit() : super(const ArtistState()) {
-    generateColor();
+class ArtistCubit extends AbstractCubit<ArtistState> {
+  final SpotifyRepo _repo;
+
+  ArtistCubit(this._repo) : super(const ArtistState()) {
+    _getArtists();
   }
 
-  generateColor() {
-    var image =
-        "https://i.scdn.co/image/ab67616d0000b273e01db9d23e1ff625e3b288b9";
-    PaletteGenerator.fromImageProvider(NetworkImage(image)).then(
-      (value) => emit(
-        state.copyWith(
-          color: value.dominantColor?.bodyTextColor.value,
-        ),
-      ),
-    );
+  void _getArtists() async {
+    emit(state.copyWith(apiResult: ApiResult.loading()));
+    var result = await _repo.getArtists();
+    emit(state.copyWith(
+      apiResult: result,
+    ));
   }
 }

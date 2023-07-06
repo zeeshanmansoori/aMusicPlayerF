@@ -6,4 +6,9 @@ class Pair<A, B> {
     this.first,
     this.second,
   );
+
+  @override
+  String toString() {
+    return 'Pair{first: $first, second: $second}';
+  }
 }

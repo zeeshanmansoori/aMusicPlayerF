@@ -15,7 +15,7 @@ class AlbumsResponse {
   int offset;
   int limit;
   String href;
-  List<Items> items;
+  List<AlbumItems> items;
 
   factory AlbumsResponse.fromJson(Map<dynamic, dynamic> json) => AlbumsResponse(
     next: json["next"],
@@ -23,7 +23,7 @@ class AlbumsResponse {
     offset: json["offset"],
     limit: json["limit"],
     href: json["href"],
-    items: List<Items>.from(json["items"].map((x) => Items.fromJson(x))),
+    items: List<AlbumItems>.from(json["items"].map((x) => AlbumItems.fromJson(x))),
   );
 
   Map<dynamic, dynamic> toJson() => {

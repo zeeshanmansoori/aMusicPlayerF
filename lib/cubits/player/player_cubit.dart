@@ -30,7 +30,22 @@ class PlayerCubit extends Cubit<PlayerState> {
     });
   }
 
-  void updateColor(int? color) {
-    emit(state.copyWith(primaryColor: color));
+  void updateColor(String albumId, int color) {
+    Map<String, int> map = Map.from(state.palette);
+    map[albumId] = color;
+    emit(state.copyWith(
+      primaryColor: color,
+      palette: map,
+    ));
+  }
+
+  bool hasColorGenerated(String albumId) {
+    return state.palette[albumId] != null;
+  }
+
+  int getAlbumColorAndSetPrimaryColor(String id) {
+    var albumColor = state.palette[id] ?? state.primaryColor;
+    emit(state.copyWith(primaryColor: albumColor));
+    return albumColor;
   }
 }

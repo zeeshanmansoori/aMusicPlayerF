@@ -1,11 +1,12 @@
 import 'dart:ui';
 
 import 'package:a_music_player_flutter/cubits/album/album_cubit.dart';
+import 'package:a_music_player_flutter/cubits/player/player_cubit.dart';
 import 'package:a_music_player_flutter/custom_widgets/circular_image.dart';
+import 'package:a_music_player_flutter/custom_widgets/color_palette_image.dart';
 import 'package:a_music_player_flutter/ui/album/widgets/album_track_widget.dart';
 import 'package:a_music_player_flutter/utils/custom_colors.dart';
 import 'package:a_music_player_flutter/utils/widget_extensions.dart';
-import 'package:api_client_repo/api_client.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:spotify_repo/spotify_repo.dart';
@@ -20,15 +21,22 @@ class AlbumScreen extends StatefulWidget {
 }
 
 class _AlbumScreenState extends State<AlbumScreen> {
+  late Color primaryColor;
+  late String albumId;
+
   @override
-  Widget build(BuildContext context) {
+  void didChangeDependencies() {
     var args =
         ModalRoute.of(context)!.settings.arguments as Map<String, Object?>;
-    var albumId = args["id"].toString();
-    var bgColor = args["color"] == null
+    albumId = args["id"].toString();
+    primaryColor = args["color"] == null
         ? CustomColors.colorPrimary
         : Color(args["color"] as int);
+    super.didChangeDependencies();
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return BlocProvider(
       create: (BuildContext context) =>
           AlbumCubit(context.read<SpotifyRepo>(), albumId),
@@ -40,17 +48,18 @@ class _AlbumScreenState extends State<AlbumScreen> {
           var album = state.apiResult.body;
           if (album == null) return Text(state.msg ?? "").wrapCenter();
           // var size = MediaQuery.of(context).size;
-          return Container(
+          return AnimatedContainer(
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [
-                  bgColor,
+                  primaryColor,
                   Colors.black87,
                 ],
               ),
             ),
+            duration: const Duration(milliseconds: 200),
             child: SafeArea(
               child: Stack(
                 children: [
@@ -66,8 +75,19 @@ class _AlbumScreenState extends State<AlbumScreen> {
                               )
                             ],
                           ),
-                          child: CustomImage(
+                          child: ColorPaletteImage(
                             url: album.images.first.url,
+                            onColorGenerated: (color) {
+                              context
+                                  .read<PlayerCubit>()
+                                  .updateColor(albumId, color);
+                              setState(() {
+                                primaryColor = Color(color);
+                              });
+                            },
+                            isColorFetched: () => context
+                                .read<PlayerCubit>()
+                                .hasColorGenerated(albumId),
                             size: 180,
                           ),
                         ).expanded(flex: 45),

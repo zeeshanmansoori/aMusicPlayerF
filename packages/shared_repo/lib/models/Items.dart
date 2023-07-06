@@ -1,7 +1,7 @@
 import 'package:shared_repo/models/artist_response.dart';
 import 'package:shared_repo/models/image_response.dart';
 
-class Items {
+class AlbumItems {
   final List<ImageResponse> images;
   final String uri;
   final int totalTracks;
@@ -13,7 +13,7 @@ class Items {
   final String href;
   final String id;
 
-  Items({
+  AlbumItems({
     required this.images,
     // required this.availableMarkets,
     // required this.releaseDatePrecision,
@@ -28,8 +28,8 @@ class Items {
     required this.id,
   });
 
-  factory Items.fromJson(Map<dynamic, dynamic> json) {
-    return Items(
+  factory AlbumItems.fromJson(Map<dynamic, dynamic> json) {
+    return AlbumItems(
       images: List<ImageResponse>.from(
           json["images"].map((x) => ImageResponse.fromJson(x))),
       // availableMarkets:
