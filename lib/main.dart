@@ -39,20 +39,25 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: FlexThemeData.light(scheme: FlexScheme.blueWhale),
-      darkTheme: FlexThemeData.dark(scheme: FlexScheme.blue),
-      // Use dark or light theme based on system setting.
-      themeMode: ThemeMode.system,
-      home: MultiRepositoryProvider(
-        providers: [
-          RepositoryProvider(create: (c) => spotifyRepo),
-        ],
-        child: const MainScreen(),
-        // child: Scaffold(
-        //   body: AlbumScreen(),
-        // ),
+    return MultiRepositoryProvider(
+      providers: [
+        RepositoryProvider(create: (c) => spotifyRepo),
+      ],
+      child: BlocProvider(
+        create: (BuildContext context) {
+          return PlayerCubit();
+        },
+        child: MaterialApp(
+          title: 'Flutter Demo',
+          theme: FlexThemeData.light(scheme: FlexScheme.blueWhale),
+          darkTheme: FlexThemeData.dark(scheme: FlexScheme.blue),
+          // Use dark or light theme based on system setting.
+          themeMode: ThemeMode.system,
+          home: const MainScreen(),
+          routes: {
+            AlbumScreen.routeName: (_) => const AlbumScreen(),
+          },
+        ),
       ),
     );
   }
@@ -65,22 +70,22 @@ class MainScreen extends StatefulWidget {
     NavItem(
       title: "Home",
       icon: CupertinoIcons.home,
-      routeName: HomeScreen.routeName,
+      screen: HomeScreen(),
     ),
     NavItem(
       title: "Album",
       icon: CupertinoIcons.music_albums,
-      routeName: AlbumsScreen.routeName,
+      screen: AlbumsScreen(),
     ),
     NavItem(
       title: "Artist",
       icon: Icons.music_note,
-      routeName: ArtistScreen.routeName,
+      screen: ArtistScreen(),
     ),
     NavItem(
       title: "Playlist",
       icon: CupertinoIcons.music_note_list,
-      routeName: PlaylistScreen.routeName,
+      screen: PlaylistScreen(),
     ),
   ];
 
@@ -90,114 +95,48 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
   var _selectedIndex = 0;
-  final _navigatorKey = GlobalKey<NavigatorState>();
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (BuildContext context) {
-        return PlayerCubit();
-      },
-      child: Scaffold(
-        // appBar: PreferredSize(
-        //   preferredSize: Size.zero,
-        //   child: AppBar(
-        //     // systemOverlayStyle: SystemUiOverlayStyle.dark.copyWith(
-        //       // statusBarColor: Colors.white,
-        //     // ),
-        //   ),
-        // ),
-        bottomNavigationBar: BlocBuilder<PlayerCubit, PlayerState>(
-          buildWhen: (p, c) => p.primaryColor != c.primaryColor,
-          builder: (context, state) {
-            return NavigationBar(
-              height: Constants.bottomNavHeight,
-              selectedIndex: _selectedIndex,
-              destinations: MainScreen.navItems
-                  .map(
-                    (e) => NavigationDestination(
-                      icon: Icon(e.icon),
-                      label: e.title,
-                    ),
-                  )
-                  .toList(),
-              onDestinationSelected: (index) {
-                handleNestedNavigation(index);
-                updateBottomNav(index);
-              },
-              indicatorColor: Color(state.primaryColor),
-            );
-          },
-        ),
-        body: WillPopScope(
-          onWillPop: () {
-            var state = _navigatorKey.currentState;
-            var canPop = state?.canPop() ?? false;
-
-            if (state == null || !canPop) return Future.value(true);
-            var name = ModalRoute.of(state.context)!.settings.name;
-            print("zeeshan navName ${name}");
-            // state.popUntil((route) => route.isFirst);
-             state.pop();
-
-            updateBottomNav(0);
-            return Future(() => false);
-          },
-          child: Column(
-            children: [
-              Navigator(
-                key: _navigatorKey,
-                initialRoute: MainScreen.navItems.first.routeName,
-                onGenerateRoute: (settings) {
-                  late Widget page;
-                  switch (settings.name) {
-                    case HomeScreen.routeName || "/":
-                      page = const HomeScreen();
-                      break;
-                    case AlbumsScreen.routeName:
-                      page = const AlbumsScreen();
-                      break;
-                    case ArtistScreen.routeName:
-                      page = const ArtistScreen();
-                      break;
-                    case PlaylistScreen.routeName:
-                      page = const PlaylistScreen();
-                      break;
-                    case AlbumScreen.routeName:
-                      page = const AlbumScreen();
-                      break;
-                  }
-
-                  return MaterialPageRoute<dynamic>(
-                    builder: (context) {
-                      return page;
-                    },
-                    settings: settings,
-                  );
+    return Scaffold(
+      // appBar: PreferredSize(
+      //   preferredSize: Size.zero,
+      //   child: AppBar(
+      //     // systemOverlayStyle: SystemUiOverlayStyle.dark.copyWith(
+      //       // statusBarColor: Colors.white,
+      //     // ),
+      //   ),
+      // ),
+      bottomNavigationBar: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const PlayerStaticBarWidget(),
+          BlocBuilder<PlayerCubit, PlayerState>(
+            buildWhen: (p, c) => p.primaryColor != c.primaryColor,
+            builder: (context, state) {
+              return NavigationBar(
+                height: Constants.bottomNavHeight,
+                selectedIndex: _selectedIndex,
+                destinations: MainScreen.navItems
+                    .map(
+                      (e) => NavigationDestination(
+                        icon: Icon(e.icon),
+                        label: e.title,
+                      ),
+                    )
+                    .toList(),
+                onDestinationSelected: (index) {
+                  setState(() {
+                    _selectedIndex = index;
+                  });
                 },
-              ).expanded(),
-              const PlayerStaticBarWidget()
-            ],
+                indicatorColor: Color(state.primaryColor),
+              );
+            },
           ),
-        ),
+        ],
       ),
+      body: MainScreen.navItems[_selectedIndex].screen,
     );
-  }
-
-  void handleNestedNavigation(int index) {
-    var navState = _navigatorKey.currentState;
-    var oldRoute = ModalRoute.of(context)?.settings.name;
-    var newRoute = MainScreen.navItems[index].routeName;
-    if (navState == null || newRoute == oldRoute) return;
-    navState.pushNamed(newRoute);
-  }
-
-  void updateBottomNav(int index) {
-    setState(() {
-      if (_selectedIndex != index) {
-        _selectedIndex = index;
-        (index);
-      }
-    });
   }
 }

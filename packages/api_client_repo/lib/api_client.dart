@@ -11,7 +11,7 @@ import 'package:shared_repo/models/api_result.dart';
 class ApiClient {
   static ApiClient? _instance;
   static String accessToken =
-      "BQCwjxDQOp4Eqrgf1pb83exHcFe6R7KXXhVKhe2g8rrzjsrCS9DgzQbG9CeaEfrFE1TJrXWiOE21ru99QtDkqN-neQ5egwPULMf6sKMnCvQdwEfmXoA";
+      "BQATdF4ThnOBJo0ZtkeVEhi7nhYcXhk63XbCDl3e5njwQ-nuczVSNAzV3Vfr5ZGOk6htQ53dV5M9ec8n1I4zkAnCrye2D3aQcy94LsKegyXdKVVBjv8";
 
   var useApi = true;
 

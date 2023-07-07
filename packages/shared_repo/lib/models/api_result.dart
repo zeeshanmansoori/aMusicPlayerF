@@ -10,6 +10,7 @@ class ApiResult<T> {
   final T? body;
 
   bool get isLoading => status == LOADING;
+  bool get isSuccess => status == SUCCESS;
   bool get isUnAuthorized => status == UN_AUTHORIZE;
 
   const ApiResult(

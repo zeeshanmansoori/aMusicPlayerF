@@ -13,7 +13,7 @@ class SpotifyRepo {
   SpotifyRepo(this._client);
 
   Future<ApiResult<AlbumsResponse>> getNewAlbums({bool useCache = true}) {
-    if (useCache && cachedAlbums != null) {
+    if (useCache && cachedAlbums != null && cachedAlbums?.isSuccess == true) {
       return Future.value(cachedAlbums);
     }
     var result = _client.getNewAlbums();
