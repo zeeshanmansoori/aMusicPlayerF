@@ -1,7 +1,10 @@
+import 'package:a_music_player_flutter/cubits/player/player_cubit.dart';
+import 'package:a_music_player_flutter/ui/artist/artist_screen.dart';
 import 'package:a_music_player_flutter/utils/utils.dart';
 import 'package:a_music_player_flutter/utils/widget_extensions.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_repo/models/artist_response.dart';
 
 class ArtistItemWidget extends StatelessWidget {
@@ -42,7 +45,12 @@ class ArtistItemWidget extends StatelessWidget {
         Text(artist.name).padding(top: 10)
       ],
     ).paddingWithSymmetry(vertical: 10).asButton(
-          onClick: () {},
+          onClick: () {
+            Navigator.of(context).pushNamed(ArtistScreen.routeName, arguments: {
+              "artist": artist,
+              "color": context.read<PlayerCubit>().getPrimaryColor(),
+            });
+          },
           radius: const BorderRadius.all(
             Radius.circular(20),
           ),

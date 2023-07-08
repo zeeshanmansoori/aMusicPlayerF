@@ -30,7 +30,7 @@ class SpotifyRepo {
   }
 
   Future<ApiResult<List<ArtistResponse>>> getArtists({bool useCache = true}) {
-    if (useCache && cachedArtists != null) {
+    if (useCache && cachedArtists != null && cachedArtists?.isSuccess == true) {
       return Future.value(cachedArtists);
     }
     return _client.getArtists(artistIds).then((value) => cachedArtists = value);

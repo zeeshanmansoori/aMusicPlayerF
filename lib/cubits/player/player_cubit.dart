@@ -48,4 +48,6 @@ class PlayerCubit extends Cubit<PlayerState> {
     emit(state.copyWith(primaryColor: albumColor));
     return albumColor;
   }
+
+  int getPrimaryColor() => state.primaryColor;
 }

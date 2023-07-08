@@ -3,11 +3,11 @@ import 'package:a_music_player_flutter/models/nav_item.dart';
 import 'package:a_music_player_flutter/ui/album/album_screen.dart';
 import 'package:a_music_player_flutter/ui/albums/albums_screen.dart';
 import 'package:a_music_player_flutter/ui/artist/artist_screen.dart';
+import 'package:a_music_player_flutter/ui/artists/artists_screen.dart';
 import 'package:a_music_player_flutter/ui/home/home_screen.dart';
 import 'package:a_music_player_flutter/ui/main/player_static_bar_widget.dart';
 import 'package:a_music_player_flutter/ui/playlist/playlist_screen.dart';
 import 'package:a_music_player_flutter/utils/constants.dart';
-import 'package:a_music_player_flutter/utils/widget_extensions.dart';
 import 'package:api_client_repo/api_client.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/cupertino.dart';
@@ -56,6 +56,7 @@ class MyApp extends StatelessWidget {
           home: const MainScreen(),
           routes: {
             AlbumScreen.routeName: (_) => const AlbumScreen(),
+            ArtistScreen.routeName: (_) => const ArtistScreen(),
           },
         ),
       ),
@@ -69,7 +70,7 @@ class MainScreen extends StatefulWidget {
   static const navItems = [
     NavItem(
       title: "Home",
-      icon: CupertinoIcons.home,
+      icon: CupertinoIcons.music_house,
       screen: HomeScreen(),
     ),
     NavItem(
@@ -79,8 +80,8 @@ class MainScreen extends StatefulWidget {
     ),
     NavItem(
       title: "Artist",
-      icon: Icons.music_note,
-      screen: ArtistScreen(),
+      icon: Icons.music_note_outlined,
+      screen: ArtistsScreen(),
     ),
     NavItem(
       title: "Playlist",

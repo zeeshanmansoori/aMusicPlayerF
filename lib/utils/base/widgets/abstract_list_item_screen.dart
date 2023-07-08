@@ -24,30 +24,28 @@ abstract class AbstractListItemScreen<T, C extends AbstractCubit<S>,
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (BuildContext context) => getCubit(context),
-      child: Scaffold(
-        body: BlocBuilder<C, S>(
-          builder: (context, state) {
-            if (state.apiResult.isLoading) {
-              return const CircularProgressIndicator().wrapCenter();
-            }
-            var data = state.apiResult.body;
-            if (data == null) {
-              return Text(state.apiResult.msg).wrapCenter();
-            }
-            var items = getItems(data);
-            var cubit =  context.read<C>();
-            return GridView.builder(
-              padding: gridPadding,
-              gridDelegate: gridDelegate ??
-                  const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                  ),
-              itemBuilder: (context, index) =>
-                  getListWidget(cubit, context, items[index]),
-              itemCount: items.length,
-            );
-          },
-        ),
+      child: BlocBuilder<C, S>(
+        builder: (context, state) {
+          if (state.apiResult.isLoading) {
+            return const CircularProgressIndicator().wrapCenter();
+          }
+          var data = state.apiResult.body;
+          if (data == null) {
+            return Text(state.apiResult.msg).wrapCenter();
+          }
+          var items = getItems(data);
+          var cubit =  context.read<C>();
+          return GridView.builder(
+            padding: gridPadding,
+            gridDelegate: gridDelegate ??
+                const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                ),
+            itemBuilder: (context, index) =>
+                getListWidget(cubit, context, items[index]),
+            itemCount: items.length,
+          );
+        },
       ),
     );
   }

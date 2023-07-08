@@ -11,7 +11,7 @@ import 'package:shared_repo/models/api_result.dart';
 class ApiClient {
   static ApiClient? _instance;
   static String accessToken =
-      "BQATdF4ThnOBJo0ZtkeVEhi7nhYcXhk63XbCDl3e5njwQ-nuczVSNAzV3Vfr5ZGOk6htQ53dV5M9ec8n1I4zkAnCrye2D3aQcy94LsKegyXdKVVBjv8";
+      "BQCgWrWr1b28EXrm5tezQWtJIEcMbn4U5VHz5QOb6OhNX796yC7GD7SAeFH0OSdTccEzF-jQUajoPFNvb1_IOH1jvDoKFnO6QKQK7Mlow_RYNewMuvQ";
 
   var useApi = true;
 
@@ -140,6 +140,8 @@ class ApiClient {
   ApiResult<T> _checkErrorCode<T>(http.Response response) {
     log("ApiClient _checkErrorCode ${response.statusCode} ${response.body}");
     if (response.statusCode == 401) {
+      //TODO("temp code: will remove it later .....")
+      getAccessToken();
       return ApiResult<T>(
         ApiResult.UN_AUTHORIZE,
         "Session Expired!",
