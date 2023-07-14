@@ -1,3 +1,4 @@
+import 'package:a_music_player_flutter/cubits/player/player_cubit.dart';
 import 'package:a_music_player_flutter/ui/player/widgets/player_controller_widget.dart';
 import 'package:a_music_player_flutter/ui/player/widgets/player_progress_widget.dart';
 import 'package:a_music_player_flutter/ui/player/widgets/player_thumbnail_widget.dart';
@@ -5,15 +6,14 @@ import 'package:a_music_player_flutter/utils/marquee_text.dart';
 import 'package:a_music_player_flutter/utils/widget_extensions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class PlayerScreen extends StatelessWidget {
   const PlayerScreen({super.key});
 
-  final String text = "Long string that has more than one line."
-      " this is long text once and once again";
-
   @override
   Widget build(BuildContext context) {
+    var cubit = context.read<PlayerCubit>();
     return Container(
       color: Theme.of(context).colorScheme.surfaceVariant,
       child: Column(
@@ -30,20 +30,26 @@ class PlayerScreen extends StatelessWidget {
               )
             ],
           ),
-          const Row(
+           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              PlayerThumbnailWidget(),
+              PlayerThumbnailWidget.getPlayerThumbnailWithBloc(),
             ],
           ).expanded(flex: 2),
-          MarqueeWidget(
-              child: Text(
-            text,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-            ),
-          )).paddingWithSymmetry(
+          BlocBuilder<PlayerCubit, PlayerState>(
+            buildWhen: (p, c) => p.track != c.track,
+            builder: (context, state) {
+              return MarqueeWidget(
+                child: Text(
+                  state.track?.name??"",
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              );
+            },
+          ).paddingWithSymmetry(
             horizontal: 20,
             vertical: 40,
           ),
@@ -63,7 +69,10 @@ class PlayerScreen extends StatelessWidget {
   ) {
     return showModalBottomSheet(
       context: context,
-      builder: (ctx) => const PlayerScreen(),
+      builder: (ctx) => BlocProvider.value(
+        value: context.read<PlayerCubit>(),
+        child: const PlayerScreen(),
+      ),
       isScrollControlled: true,
       useSafeArea: true,
     );

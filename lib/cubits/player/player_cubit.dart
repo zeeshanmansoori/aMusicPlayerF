@@ -1,33 +1,24 @@
 import 'dart:async';
 
+import 'package:a_music_player_flutter/spotify_service.dart';
 import 'package:a_music_player_flutter/utils/custom_colors.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:spotify_sdk/models/track.dart';
 
 part 'player_state.dart';
 
 class PlayerCubit extends Cubit<PlayerState> {
+  final SpotifyService _service = SpotifyService();
   Timer? _cTimer;
 
-  PlayerCubit() : super(const PlayerState());
-
-  void togglePlayerState() {
-    emit(state.copyWith(isPlaying: !state.isPlaying));
-    if (state.isPlaying) {
-      _startTimer();
-    }
+  PlayerCubit() : super(const PlayerState()) {
+    _initService();
   }
 
-  void _startTimer() {
-    _cTimer?.cancel();
-    emit(state.copyWith(progress: 0));
-    _cTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      emit(
-        state.copyWith(
-          progress: state.progress + .1,
-        ),
-      );
-    });
+  void togglePlayerState() {
+    print("zee togglePlayerState");
+    _service.togglePlayingState(state.isPlaying);
   }
 
   void updateColor(String albumId, int color) {
@@ -50,4 +41,48 @@ class PlayerCubit extends Cubit<PlayerState> {
   }
 
   int getPrimaryColor() => state.primaryColor;
+
+  void _initService() async {
+    // await _service.getToken();
+    var connectResult = await _service.connectToRemote();
+    var getStream = _service.getPlayerStatusAsStream();
+    emit(state.copyWith(msg: connectResult ? null : "Something went wrong"));
+    getStream.listen((event) {
+      print("zeeshan event position ${event.playbackPosition} ${event.track}");
+      var oldState = state;
+      emit(state.copyWith(
+        isPlaying: !event.isPaused,
+        track: event.track,
+        playbackPosition: event.playbackPosition,
+      ));
+      if (oldState.isPlaying != state.isPlaying ||
+          oldState.track != state.track) {
+        if (state.isPlaying) {
+          _startTimer();
+        } else {
+          _cTimer?.cancel();
+        }
+      }
+    });
+  }
+
+  void _startTimer() {
+    _cTimer?.cancel();
+    _cTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      print(
+          "zeeshan _startTimer ${state.playbackPosition} track ${state.track?.duration}");
+      emit(
+        state.copyWith(
+          playbackPosition: state.playbackPosition + 1000,
+        ),
+      );
+    });
+  }
+
+  @override
+  Future<void> close() {
+    _cTimer?.cancel();
+    _cTimer = null;
+    return super.close();
+  }
 }

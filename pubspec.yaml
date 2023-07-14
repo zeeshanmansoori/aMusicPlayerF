@@ -27,6 +27,7 @@ dependencies:
   palette_generator: ^0.3.3+2
 #  flutter_cache_manager: ^3.3.0
   cached_network_image: ^3.0.0
+  spotify_sdk: ^2.3.1
 
 
 

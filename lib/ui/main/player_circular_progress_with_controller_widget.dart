@@ -10,6 +10,7 @@ class PlayerCircularProgressWithControllerWidget extends StatelessWidget {
     return BlocBuilder<PlayerCubit, PlayerState>(
       builder: (context, state) {
         var cubit = context.read<PlayerCubit>();
+        print("zeeshan progress ${state.progress}");
         return Stack(
           alignment: Alignment.center,
           children: [
@@ -21,7 +22,7 @@ class PlayerCircularProgressWithControllerWidget extends StatelessWidget {
               onPressed: cubit.togglePlayerState,
               // iconSize: 10,
               icon: Icon(
-                state.isPlaying ? Icons.play_arrow : Icons.pause,
+                !state.isPlaying ? Icons.play_arrow : Icons.pause,
               ),
             )
           ],

@@ -47,13 +47,26 @@ class MyApp extends StatelessWidget {
         create: (BuildContext context) {
           return PlayerCubit();
         },
-        child: MaterialApp(
+        child:
+        MaterialApp(
           title: 'Flutter Demo',
           theme: FlexThemeData.light(scheme: FlexScheme.blueWhale),
           darkTheme: FlexThemeData.dark(scheme: FlexScheme.blue),
           // Use dark or light theme based on system setting.
           themeMode: ThemeMode.system,
-          home: const MainScreen(),
+          home: BlocListener<PlayerCubit, PlayerState>(
+            listenWhen: (p, c) => p.msg != c.msg,
+            listener: (context, state) {
+              if (state.msg != null) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(state.msg!),
+                  ),
+                );
+              }
+            },
+            child: const MainScreen(),
+          ),
           routes: {
             AlbumScreen.routeName: (_) => const AlbumScreen(),
             ArtistScreen.routeName: (_) => const ArtistScreen(),
