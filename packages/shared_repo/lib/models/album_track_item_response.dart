@@ -11,7 +11,7 @@ class AlbumTrackItemResponse {
   final String id;
   final bool isLocal;
   final String name;
-  final String previewUrl;
+  final String? previewUrl;
   final int trackNumber;
   final String type;
   final String uri;

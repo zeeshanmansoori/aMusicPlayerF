@@ -53,7 +53,7 @@ class MyApp extends StatelessWidget {
           theme: FlexThemeData.light(scheme: FlexScheme.blueWhale),
           darkTheme: FlexThemeData.dark(scheme: FlexScheme.blue),
           // Use dark or light theme based on system setting.
-          themeMode: ThemeMode.system,
+          themeMode: ThemeMode.dark,
           home: BlocListener<PlayerCubit, PlayerState>(
             listenWhen: (p, c) => p.msg != c.msg,
             listener: (context, state) {

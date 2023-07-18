@@ -17,7 +17,6 @@ class PlayerCubit extends Cubit<PlayerState> {
   }
 
   void togglePlayerState() {
-    print("zee togglePlayerState");
     _service.togglePlayingState(state.isPlaying);
   }
 
@@ -43,12 +42,12 @@ class PlayerCubit extends Cubit<PlayerState> {
   int getPrimaryColor() => state.primaryColor;
 
   void _initService() async {
-    // await _service.getToken();
+    //await _service.getToken();
     var connectResult = await _service.connectToRemote();
     var getStream = _service.getPlayerStatusAsStream();
     emit(state.copyWith(msg: connectResult ? null : "Something went wrong"));
     getStream.listen((event) {
-      print("zeeshan event position ${event.playbackPosition} ${event.track}");
+      print("zeeshan  track uri  ${event.track?.uri}");
       var oldState = state;
       emit(state.copyWith(
         isPlaying: !event.isPaused,
@@ -69,8 +68,6 @@ class PlayerCubit extends Cubit<PlayerState> {
   void _startTimer() {
     _cTimer?.cancel();
     _cTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      print(
-          "zeeshan _startTimer ${state.playbackPosition} track ${state.track?.duration}");
       emit(
         state.copyWith(
           playbackPosition: state.playbackPosition + 1000,
@@ -84,5 +81,16 @@ class PlayerCubit extends Cubit<PlayerState> {
     _cTimer?.cancel();
     _cTimer = null;
     return super.close();
+  }
+
+  void playNext() {
+    _service.playNext();
+  }
+  void playPrevious() {
+    _service.playPrevious();
+  }
+
+  void playSong(String uri) {
+    _service.playSpotifyUri(uri);
   }
 }

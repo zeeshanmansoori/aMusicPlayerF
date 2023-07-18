@@ -30,28 +30,27 @@ class PlayerScreen extends StatelessWidget {
               )
             ],
           ),
-           Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              PlayerThumbnailWidget.getPlayerThumbnailWithBloc(),
-            ],
-          ).expanded(flex: 2),
           BlocBuilder<PlayerCubit, PlayerState>(
-            buildWhen: (p, c) => p.track != c.track,
+            buildWhen: (p, c) => p.track!.album.uri != c.track!.album.uri,
             builder: (context, state) {
-              return MarqueeWidget(
-                child: Text(
-                  state.track?.name??"",
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
+              return Column(
+                children: [
+                  PlayerThumbnailStaticWidget(track: state.track).padding(top: 10),
+                  MarqueeWidget(
+                    child: Text(
+                      state.track?.name ?? "",
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ).paddingWithSymmetry(
+                    horizontal: 20,
+                    vertical: 40,
                   ),
-                ),
+                ],
               );
             },
-          ).paddingWithSymmetry(
-            horizontal: 20,
-            vertical: 40,
           ),
           const PlayerProgressWidget().paddingWithSymmetry(
             horizontal: 20,
