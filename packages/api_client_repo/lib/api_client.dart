@@ -7,11 +7,12 @@ import 'package:http/http.dart' as http;
 import 'package:shared_repo/model_exports.dart';
 import 'package:shared_repo/models/albums_response.dart';
 import 'package:shared_repo/models/api_result.dart';
+import 'package:shared_repo/utils/extensions.dart';
 
 class ApiClient {
   static ApiClient? _instance;
   static String accessToken =
-      "BQDyHESrVD8zHLFkqh0j4H-Lq5xa4NHykwOcvOkV_Ce_vvvysmUYoAX1nlmvCz0U-M1nsGMtXyKhc2rY5elgxPHPxKO1bBXQtWaMBTHT-7d6hoLULxU";
+      "BQDP9UXC_3SmgwUsYBkq1pJugxICNQURcztok9mSadUVT5BaxFc-xSjSb78N_7QEFWdHIlwcHXSPk-_IvdI7Gs80_-_o8OLUMRUq-6SqlKrRxy9pbvk";
 
   var useApi = true;
 
@@ -103,7 +104,7 @@ class ApiClient {
   Future<ApiResult<List<ArtistResponse>>> getArtists(List<String> artistIds) {
     var uri = Uri.https(
         baseUrl, "/v1/artists", {
-      "ids": artistIds.reduce((value, element) => "$value,$element"),
+      "ids": artistIds.reduceSafe((value, element) => "$value,$element"),
     });
     return runWithCatch(
           () => http.get(

@@ -8,7 +8,10 @@ import 'package:a_music_player_flutter/ui/home/home_screen.dart';
 import 'package:a_music_player_flutter/ui/main/player_static_bar_widget.dart';
 import 'package:a_music_player_flutter/ui/playlist/playlist_screen.dart';
 import 'package:a_music_player_flutter/utils/constants.dart';
+import 'package:a_music_player_flutter/utils/custom_colors.dart';
+import 'package:a_music_player_flutter/utils/widget_extensions.dart';
 import 'package:api_client_repo/api_client.dart';
+import 'package:defer_pointer/defer_pointer.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -17,15 +20,15 @@ import 'package:spotify_repo/spotify_repo.dart';
 
 void main() {
   var _client = ApiClient.getInstance(
-    // () async {
-    //   var shared = await SharedPreferences.getInstance();
-    //   return shared.getString(Constants.accessToken);
-    // },
-    // (token) async {
-    //   var shared = await SharedPreferences.getInstance();
-    //   shared.setString(Constants.accessToken, token);
-    // },
-  );
+      // () async {
+      //   var shared = await SharedPreferences.getInstance();
+      //   return shared.getString(Constants.accessToken);
+      // },
+      // (token) async {
+      //   var shared = await SharedPreferences.getInstance();
+      //   shared.setString(Constants.accessToken, token);
+      // },
+      );
   var repo = SpotifyRepo(_client);
   runApp(MyApp(repo));
 }
@@ -107,8 +110,18 @@ class MainScreen extends StatefulWidget {
   State<MainScreen> createState() => _MainScreenState();
 }
 
-class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
+class _MainScreenState extends State<MainScreen>
+    with SingleTickerProviderStateMixin {
   var _selectedIndex = 0;
+  late TabController tabController;
+
+  @override
+  void initState() {
+    tabController =
+        TabController(length: MainScreen.navItems.length, vsync: this);
+    tabController.addListener(_onTabChanged);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -121,36 +134,89 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
       //     // ),
       //   ),
       // ),
-      bottomNavigationBar: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const PlayerStaticBarWidget(),
-          BlocBuilder<PlayerCubit, PlayerState>(
-            buildWhen: (p, c) => p.primaryColor != c.primaryColor,
-            builder: (context, state) {
-              return NavigationBar(
-                height: Constants.bottomNavHeight,
-                selectedIndex: _selectedIndex,
-                destinations: MainScreen.navItems
-                    .map(
-                      (e) => NavigationDestination(
-                        icon: Icon(e.icon),
-                        label: e.title,
+      bottomNavigationBar: DeferredPointerHandler(
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: [
+            Positioned(
+              top: -65,
+              width: MediaQuery.of(context).size.width,
+              child: const DeferPointer(child: PlayerStaticBarWidget(),),
+
+            ),
+            BlocBuilder<PlayerCubit, PlayerState>(
+              buildWhen: (p, c) => p.primaryColorInt != c.primaryColorInt,
+              builder: (context, state) {
+                return Container(
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.rectangle,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(20),
+                      topRight: Radius.circular(20),
+                    ),
+                    color: CustomColors.tabColor,
+                  ),
+                  child: TabBar(
+                    controller: tabController,
+                    indicatorSize: TabBarIndicatorSize.label,
+                    indicator: UnderlineTabIndicator(
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      borderSide: BorderSide(
+                        color: state.primaryColor,
+                        width: 3,
                       ),
+                      insets: EdgeInsets.symmetric(horizontal: 25),
+                    ),
+                    tabs: MainScreen.navItems
+                        .map(
+                          (e) =>
+                          Icon(e.icon).paddingWithSymmetry(vertical: 35),
                     )
-                    .toList(),
-                onDestinationSelected: (index) {
-                  setState(() {
-                    _selectedIndex = index;
-                  });
-                },
-                indicatorColor: Color(state.primaryColor),
-              );
-            },
-          ),
-        ],
+                        .toList(),
+                    labelColor: state.primaryColor,
+                    unselectedLabelColor: CustomColors.tabIconColor,
+                  ),
+                );
+                return NavigationBar(
+                  height: Constants.bottomNavHeight,
+                  selectedIndex: _selectedIndex,
+                  destinations: MainScreen.navItems
+                      .map(
+                        (e) => NavigationDestination(
+                      icon: Icon(e.icon),
+                      label: e.title,
+                    ),
+                  )
+                      .toList(),
+                  onDestinationSelected: (index) {
+                    setState(() {
+                      _selectedIndex = index;
+                    });
+                  },
+                  indicatorColor: state.primaryColor,
+                );
+              },
+            ),
+          ],
+        ),
       ),
       body: MainScreen.navItems[_selectedIndex].screen,
     );
+  }
+
+  void _onTabChanged() {
+    var index = tabController.index;
+    var previousIndex = tabController.previousIndex;
+    if (index != previousIndex && _selectedIndex != index) {
+      setState(() {
+        _selectedIndex = index;
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    tabController.dispose();
+    super.dispose();
   }
 }

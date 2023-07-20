@@ -1,5 +1,5 @@
 import 'package:a_music_player_flutter/cubits/player/player_cubit.dart';
-import 'package:a_music_player_flutter/utils/extensions.dart';
+import 'package:shared_repo/utils/extensions.dart';
 import 'package:a_music_player_flutter/utils/widget_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

@@ -2,7 +2,8 @@ part of 'player_cubit.dart';
 
 class PlayerState extends Equatable {
   final bool isPlaying;
-  final int primaryColor;
+  final int primaryColorInt;
+  Color  get primaryColor =>Color(primaryColorInt);
   final Map<String, int> palette;
   final String? msg;
   final Track? track;
@@ -12,7 +13,7 @@ class PlayerState extends Equatable {
   @override
   List<Object?> get props => [
         isPlaying,
-        primaryColor,
+        primaryColorInt,
         palette,
         msg,
         track,
@@ -22,7 +23,7 @@ class PlayerState extends Equatable {
   const PlayerState({
     this.msg,
     this.isPlaying = false,
-    this.primaryColor = CustomColors.colorPrimaryInt,
+    this.primaryColorInt = CustomColors.colorPrimaryInt,
     this.palette = const {},
     this.track,
     this.playbackPosition = 0,
@@ -39,7 +40,7 @@ class PlayerState extends Equatable {
   }) {
     return PlayerState(
       isPlaying: isPlaying ?? this.isPlaying,
-      primaryColor: primaryColor ?? this.primaryColor,
+      primaryColorInt: primaryColor ?? this.primaryColorInt,
       palette: palette ?? this.palette,
       msg: msg ?? this.msg,
       track: track ?? this.track,

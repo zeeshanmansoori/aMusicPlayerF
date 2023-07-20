@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:a_music_player_flutter/cubits/album/album_cubit.dart';
 import 'package:a_music_player_flutter/cubits/player/player_cubit.dart';
-import 'package:a_music_player_flutter/custom_widgets/circular_image.dart';
+import 'package:a_music_player_flutter/custom_widgets/custom_image.dart';
 import 'package:a_music_player_flutter/custom_widgets/color_palette_image.dart';
 import 'package:a_music_player_flutter/ui/album/widgets/album_track_widget.dart';
 import 'package:a_music_player_flutter/ui/main/player_static_bar_widget.dart';

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:a_music_player_flutter/spotify_service.dart';
 import 'package:a_music_player_flutter/utils/custom_colors.dart';
@@ -34,12 +35,12 @@ class PlayerCubit extends Cubit<PlayerState> {
   }
 
   int getAlbumColorAndSetPrimaryColor(String id) {
-    var albumColor = state.palette[id] ?? state.primaryColor;
+    var albumColor = state.palette[id] ?? state.primaryColorInt;
     emit(state.copyWith(primaryColor: albumColor));
     return albumColor;
   }
 
-  int getPrimaryColor() => state.primaryColor;
+  int getPrimaryColor() => state.primaryColorInt;
 
   void _initService() async {
     //await _service.getToken();

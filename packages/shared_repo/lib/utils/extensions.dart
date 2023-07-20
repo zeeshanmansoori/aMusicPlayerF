@@ -24,3 +24,13 @@ extension NumExtensions on num {
     }
   }
 }
+
+extension ListExtensions<E> on List<E> {
+  E? reduceSafe(E Function(E value, E element) combine) {
+    try {
+      return reduce(combine);
+    } catch (e) {
+      return null;
+    }
+  }
+}

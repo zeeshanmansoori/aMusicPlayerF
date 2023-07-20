@@ -24,7 +24,10 @@ class HomeScreen extends StatelessWidget {
           }
 
           if (state.apiResult.isInitial) {
-            return const Text("HOME").wrapCenter();
+            return Container(
+              // color: Colors.red,
+              child: const Text("HOME").wrapCenter(),
+            );
           }
 
           if (!state.apiResult.isSuccess) {

@@ -14,64 +14,79 @@ class PlayerScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var cubit = context.read<PlayerCubit>();
-    return Container(
-      color: Theme.of(context).colorScheme.surfaceVariant,
-      child: Column(
-        mainAxisSize: MainAxisSize.max,
-        children: [
-          Row(
+    return BlocBuilder<PlayerCubit, PlayerState>(
+      buildWhen: (p,c)=>p.primaryColor!=c.primaryColor,
+      builder: (context, state) {
+        var primaryColor = cubit.state.primaryColor;
+        return Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                primaryColor,
+                Colors.black87,
+              ],
+            ),
+          ),
+          child: Column(
             mainAxisSize: MainAxisSize.max,
             children: [
-              IconButton(
-                icon: const Icon(
-                  CupertinoIcons.chevron_down,
-                ),
-                onPressed: () => Navigator.pop(context),
-              )
+              Row(
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  IconButton(
+                    icon: const Icon(
+                      CupertinoIcons.chevron_down,
+                    ),
+                    onPressed: () => Navigator.pop(context),
+                  )
+                ],
+              ),
+              BlocBuilder<PlayerCubit, PlayerState>(
+                buildWhen: (p, c) => p.track!.album.uri != c.track!.album.uri,
+                builder: (context, state) {
+                  return Column(
+                    children: [
+                      PlayerThumbnailStaticWidget(track: state.track).padding(
+                          top: 10),
+                      MarqueeWidget(
+                        child: Text(
+                          state.track?.name ?? "",
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ).paddingWithSymmetry(
+                        horizontal: 20,
+                        vertical: 40,
+                      ),
+                    ],
+                  );
+                },
+              ),
+              const PlayerProgressWidget().paddingWithSymmetry(
+                horizontal: 20,
+                vertical: 10,
+              ),
+              const PlayerControllersWidget().padding(top: 30),
+              const Spacer(),
             ],
           ),
-          BlocBuilder<PlayerCubit, PlayerState>(
-            buildWhen: (p, c) => p.track!.album.uri != c.track!.album.uri,
-            builder: (context, state) {
-              return Column(
-                children: [
-                  PlayerThumbnailStaticWidget(track: state.track).padding(top: 10),
-                  MarqueeWidget(
-                    child: Text(
-                      state.track?.name ?? "",
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ).paddingWithSymmetry(
-                    horizontal: 20,
-                    vertical: 40,
-                  ),
-                ],
-              );
-            },
-          ),
-          const PlayerProgressWidget().paddingWithSymmetry(
-            horizontal: 20,
-            vertical: 10,
-          ),
-          const PlayerControllersWidget().padding(top: 30),
-          const Spacer(),
-        ],
-      ),
+        );
+      },
     );
   }
 
-  static showPlayerBottomSheet(
-    BuildContext context,
-  ) {
+  static showPlayerBottomSheet(BuildContext context,) {
     return showModalBottomSheet(
       context: context,
-      builder: (ctx) => BlocProvider.value(
-        value: context.read<PlayerCubit>(),
-        child: const PlayerScreen(),
-      ),
+      builder: (ctx) =>
+          BlocProvider.value(
+            value: context.read<PlayerCubit>(),
+            child: const PlayerScreen(),
+          ),
       isScrollControlled: true,
       useSafeArea: true,
     );

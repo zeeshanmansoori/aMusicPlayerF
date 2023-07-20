@@ -45,7 +45,7 @@ class PlayerThumbnailStaticWidget extends StatelessWidget {
     ).asGestureButton();
   }
 
-  Widget spotifyImageWidget(ImageUri image) {
+static Widget spotifyImageWidget(ImageUri image) {
     return FutureBuilder(
         future: SpotifySdk.getImage(
           imageUri: image,
@@ -61,11 +61,7 @@ class PlayerThumbnailStaticWidget extends StatelessWidget {
               child: const Center(child: Text('Error getting image')),
             );
           } else {
-            return SizedBox(
-              width: ImageDimension.large.value.toDouble(),
-              height: ImageDimension.large.value.toDouble(),
-              child: const Center(child: Text('Getting image...')),
-            );
+          return const CircularProgressIndicator().wrapCenter();
           }
         });
   }

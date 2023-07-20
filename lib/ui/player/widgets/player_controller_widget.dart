@@ -15,7 +15,11 @@ class PlayerControllersWidget extends StatelessWidget {
       children: [
         IconButton(
           onPressed: cubit.playPrevious,
-          icon: const Icon(Icons.skip_previous),
+          icon: const Icon(CupertinoIcons.repeat),
+        ),
+        IconButton(
+          onPressed: cubit.playPrevious,
+          icon: const Icon(CupertinoIcons.),
         ),
         MaterialButton(
           onPressed: cubit.togglePlayerState,
@@ -36,6 +40,10 @@ class PlayerControllersWidget extends StatelessWidget {
         IconButton(
           onPressed: cubit.playNext,
           icon: const Icon(Icons.skip_next),
+        ),
+        IconButton(
+          onPressed: cubit.playNext,
+          icon: const Icon(CupertinoIcons.shuffle),
         ),
       ],
     );
