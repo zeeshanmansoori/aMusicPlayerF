@@ -6,7 +6,7 @@ import 'package:a_music_player_flutter/ui/artist/artist_screen.dart';
 import 'package:a_music_player_flutter/ui/artists/artists_screen.dart';
 import 'package:a_music_player_flutter/ui/home/home_screen.dart';
 import 'package:a_music_player_flutter/ui/main/player_static_bar_widget.dart';
-import 'package:a_music_player_flutter/ui/playlist/playlist_screen.dart';
+import 'package:a_music_player_flutter/ui/offlineMusic/offline_music_screen.dart';
 import 'package:a_music_player_flutter/utils/constants.dart';
 import 'package:a_music_player_flutter/utils/custom_colors.dart';
 import 'package:a_music_player_flutter/utils/widget_extensions.dart';
@@ -102,7 +102,7 @@ class MainScreen extends StatefulWidget {
     NavItem(
       title: "Playlist",
       icon: CupertinoIcons.music_note_list,
-      screen: PlaylistScreen(),
+      screen: OfflineMusicScreen(),
     ),
   ];
 

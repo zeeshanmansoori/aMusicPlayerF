@@ -8,18 +8,18 @@ class PlayerControllersWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var primaryColor = Theme.of(context).colorScheme.primary;
     var cubit = context.read<PlayerCubit>();
+    var primaryColor = Color(cubit.getPrimaryColorInt());
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         IconButton(
           onPressed: cubit.playPrevious,
-          icon: const Icon(CupertinoIcons.repeat),
+          icon: const Icon(Icons.repeat),
         ),
         IconButton(
           onPressed: cubit.playPrevious,
-          icon: const Icon(CupertinoIcons.),
+          icon: const Icon(Icons.skip_previous),
         ),
         MaterialButton(
           onPressed: cubit.togglePlayerState,
@@ -43,7 +43,7 @@ class PlayerControllersWidget extends StatelessWidget {
         ),
         IconButton(
           onPressed: cubit.playNext,
-          icon: const Icon(CupertinoIcons.shuffle),
+          icon: const Icon(Icons.shuffle),
         ),
       ],
     );

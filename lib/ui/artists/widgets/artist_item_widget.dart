@@ -48,7 +48,7 @@ class ArtistItemWidget extends StatelessWidget {
           onClick: () {
             Navigator.of(context).pushNamed(ArtistScreen.routeName, arguments: {
               "artist": artist,
-              "color": context.read<PlayerCubit>().getPrimaryColor(),
+              "color": context.read<PlayerCubit>().getPrimaryColorInt(),
             });
           },
           radius: const BorderRadius.all(

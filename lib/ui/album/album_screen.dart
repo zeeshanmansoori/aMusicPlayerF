@@ -39,8 +39,7 @@ class _AlbumScreenState extends State<AlbumScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (BuildContext context) =>
-          AlbumCubit(context.read<SpotifyRepo>(), albumId),
+      create: (BuildContext context) => AlbumCubit(context.read<SpotifyRepo>(), albumId),
       child: Scaffold(
         body:AnimatedContainer(
           height: double.infinity,

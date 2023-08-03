@@ -12,7 +12,7 @@ import 'package:shared_repo/utils/extensions.dart';
 class ApiClient {
   static ApiClient? _instance;
   static String accessToken =
-      "BQDP9UXC_3SmgwUsYBkq1pJugxICNQURcztok9mSadUVT5BaxFc-xSjSb78N_7QEFWdHIlwcHXSPk-_IvdI7Gs80_-_o8OLUMRUq-6SqlKrRxy9pbvk";
+      "BQDrjkuadItkNF0Z9UFhHp9DQl6AjRv3XdNr7W4cuJrC5lEQLKgXdmtcN-zfkLbpAfX-Vc6_TEt4CL31hqwioYC3izHDGGB3OCsAJW6cuKUJ7hb0BMw";
 
   var useApi = true;
 

@@ -24,13 +24,14 @@ class PlayerCircularProgressWidget extends StatelessWidget {
       children: [
 
         BlocBuilder<PlayerCubit, PlayerState>(
-          buildWhen: (p, c) => p.isPlaying != c.isPlaying || p.primaryColor!=c.primaryColor,
+          buildWhen: (p, c) => p.progress!=c.progress,
           builder: (context, state) {
+
             return SizedBox(
               height: size,
               width: size,
               child: CircularProgressIndicator(
-                value: .5,
+                value: state.progress,
                 strokeWidth: 2,
                 color: state.primaryColor,
               ),

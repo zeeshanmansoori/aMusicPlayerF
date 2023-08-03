@@ -40,7 +40,7 @@ class PlayerCubit extends Cubit<PlayerState> {
     return albumColor;
   }
 
-  int getPrimaryColor() => state.primaryColorInt;
+  int getPrimaryColorInt() => state.primaryColorInt;
 
   void _initService() async {
     //await _service.getToken();

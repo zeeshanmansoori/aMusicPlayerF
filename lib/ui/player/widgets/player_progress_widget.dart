@@ -17,6 +17,7 @@ class PlayerProgressWidget extends StatelessWidget {
 
             LinearProgressIndicator(
               value: state.progress,
+              color: state.primaryColor,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
